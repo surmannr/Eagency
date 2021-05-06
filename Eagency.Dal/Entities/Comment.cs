@@ -16,6 +16,7 @@ namespace Eagency.Dal.Entities
         public string Question { get; set; }
         [StringLength(500)]
         public string Answer { get; set; }
+        public DateTimeOffset Date { get; set; }
 
         [ForeignKey(nameof(Property))]
         public int PropertyId { get; set; }

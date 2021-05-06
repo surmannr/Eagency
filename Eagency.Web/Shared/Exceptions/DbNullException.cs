@@ -12,7 +12,7 @@ namespace Eagency.Web.Shared.Exceptions
         {
         }
 
-        public DbNullException(string message) : base(message)
+        public DbNullException(string message) : base("Nincs ilyen elem az adatbázisban.")
         {
         }
     }

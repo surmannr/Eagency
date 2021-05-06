@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Eagency.BLL.Services.Interfaces;
 using Eagency.Dal;
 using Eagency.Dal.Entities;
 using Eagency.Web.Shared.Dto;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Eagency.BLL.Services
 {
-    public class PropertyService
+    public class PropertyService : IPropertyService
     {
         private readonly EagencyDbContext db;
         private readonly IMapper mapper;
@@ -34,6 +35,12 @@ namespace Eagency.BLL.Services
             return mapper.Map<PropertyDto>(property);
         }
 
+        public async Task<IEnumerable<PropertyDto>> GetAllAsync()
+        {
+            var properties = await db.Properties.ToListAsync();
+            return mapper.Map<IEnumerable<PropertyDto>>(properties);
+        }
+
         public async Task<PagedResult<PropertyDto>> GetAllPagedAsync(int pagesize, int pagenumber)
         {
             if (pagesize < 0 || pagenumber < 0)
@@ -43,7 +50,7 @@ namespace Eagency.BLL.Services
 
             PagedResult<PropertyDto> result = new PagedResult<PropertyDto>();
 
-            var properties = await db.Properties.Paging(pagesize, pagenumber).ToListAsync();
+            var properties = await db.Properties.OrderBy(c => c.Id).Paging(pagesize, pagenumber).ToListAsync();
             var count = await db.Properties.CountAsync();
 
             result.Results = mapper.Map<IEnumerable<PropertyDto>>(properties);
@@ -70,13 +77,38 @@ namespace Eagency.BLL.Services
 
         public async Task DeleteAsync(int id)
         {
-            var property = await db.Properties.Where(p => p.Id == id).FirstOrDefaultAsync();
+            var property = await db.Properties.Where(p => p.Id == id).Include(c => c.Comments).Include(c => c.Contract).FirstOrDefaultAsync();
             if (property == null)
             {
                 throw new DbNullException();
             }
-            db.Remove(property);
-            await db.SaveChangesAsync();
+
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var comment in property.Comments)
+                    {
+                        db.Comments.Remove(comment);
+                    }
+                    
+                    if(property.Contract != null)
+                    {
+                        await transaction.RollbackAsync();
+                    }
+
+                    db.Properties.Remove(property);
+                    await db.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+
+            }
+
         }
 
         public async Task<PropertyDto> ModifyAsync(int id, PropertyDto modify)

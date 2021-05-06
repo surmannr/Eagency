@@ -21,14 +21,9 @@ namespace Eagency.BLL.Config.Mapper
                 .ForMember(e => e.Street, a => a.MapFrom(s => s.Address.Street))
                 .ForMember(e => e.City, a => a.MapFrom(s => s.Address.City))
                 .ForMember(e => e.Country, a => a.MapFrom(s => s.Address.Country))
-                .ForMember(e => e.ZipCode, a => a.MapFrom(s => s.Address.ZipCode));
+                .ForMember(e => e.ZipCode, a => a.MapFrom(s => s.Address.ZipCode))
+                .ReverseMap();
 
-            CreateMap<PropertyDto, Property>()
-                .BeforeMap((s,d) => d.Address.PropertyId = s.Id)
-                .ForMember(e => e.Address.Street, a => a.MapFrom(s => s.Street))
-                .ForMember(e => e.Address.City, a => a.MapFrom(s => s.City))
-                .ForMember(e => e.Address.Country, a => a.MapFrom(s => s.Country))
-                .ForMember(e => e.Address.ZipCode, a => a.MapFrom(s => s.ZipCode));
         }
     }
 }

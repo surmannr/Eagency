@@ -12,7 +12,7 @@ namespace Eagency.Web.Shared.Exceptions
         {
         }
 
-        public InvalidQueryParamsException(string message) : base(message)
+        public InvalidQueryParamsException(string message) : base("Hibás paraméterek.")
         {
         }
     }

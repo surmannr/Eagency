@@ -38,7 +38,6 @@ namespace Eagency.Web.Shared.Dto
         public int Area { get; set; }
         public string ImageName { get; set; }
 
-        public int? ContractId { get; set; }
         public string AgentId { get; set; }
     }
 }
