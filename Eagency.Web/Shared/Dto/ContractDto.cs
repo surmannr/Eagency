@@ -20,6 +20,7 @@ namespace Eagency.Web.Shared.Dto
         [Required]
         public int PaymentFrequency { get; set; }
         public bool IsPaid { get; set; }
+        public bool IsSigned { get; set; }
 
         public int PropertyId { get; set; }
 

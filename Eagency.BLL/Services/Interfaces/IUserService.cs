@@ -1,4 +1,5 @@
-﻿using Eagency.Web.Shared.Dto;
+﻿using Eagency.Dal.Entities;
+using Eagency.Web.Shared.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Eagency.BLL.Services.Interfaces
     {
         Task<List<UserDto>> GetAllAsync();
         Task<UserDto> GetByIdAsync(string id);
+        Task<User> GetByIdModelAsync(string id);
         Task<UserDto> CreateCustomerAsync(UserDto create);
         Task<UserDto> CreateAdminAsync(UserDto create);
         Task DeleteAsync(string id);

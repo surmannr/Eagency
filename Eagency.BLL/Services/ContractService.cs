@@ -47,7 +47,7 @@ namespace Eagency.BLL.Services
             PagedResult<ContractDto> result = new PagedResult<ContractDto>();
 
             var properties = await db.Contracts.Where(c => c.ClientId == userid).OrderBy(c => c.Date).Paging(pagesize, pagenumber).ToListAsync();
-            var count = await db.Contracts.CountAsync();
+            var count = await db.Contracts.Where(c => c.ClientId == userid).CountAsync();
 
             result.Results = mapper.Map<IEnumerable<ContractDto>>(properties);
             result.PageSize = pagesize;
@@ -112,6 +112,20 @@ namespace Eagency.BLL.Services
             {
                 return false;
             }
+        }
+
+        public async Task<ContractDto> ModifySignedAsync(int id)
+        {
+            var entity = await db.Contracts.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (entity == null)
+            {
+                throw new DbNullException();
+            }
+
+            entity.IsSigned = true;
+
+            await db.SaveChangesAsync();
+            return mapper.Map<ContractDto>(entity);
         }
     }
 }

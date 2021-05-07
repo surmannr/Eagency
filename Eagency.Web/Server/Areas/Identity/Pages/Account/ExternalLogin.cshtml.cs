@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Eagency.Web.Shared.Contants;
 
 namespace Eagency.Web.Server.Areas.Identity.Pages.Account
 {
@@ -49,6 +50,12 @@ namespace Eagency.Web.Server.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required]
+            public string Username { get; set; }
+            [Required]
+            public string Firstname { get; set; }
+            [Required]
+            public string Lastname { get; set; }
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -122,7 +129,13 @@ namespace Eagency.Web.Server.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var user = new User
+                {
+                    UserName = Input.Username,
+                    Email = Input.Email,
+                    FirstName = Input.Firstname,
+                    LastName = Input.Lastname
+                };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
@@ -133,6 +146,7 @@ namespace Eagency.Web.Server.Areas.Identity.Pages.Account
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
                         var userId = await _userManager.GetUserIdAsync(user);
+                        await _userManager.AddToRoleAsync(user, Roles.Customer);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Page(

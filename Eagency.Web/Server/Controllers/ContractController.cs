@@ -90,5 +90,19 @@ namespace Eagency.Web.Server.Controllers
             var contract = await contractService.ModifyPaidAsync(id, ispad);
             return Ok(contract);
         }
+
+        [SwaggerOperation(
+                Summary = "Szerződés aláírt státusz megváltoztatása.",
+                Description = "A módosítás előtt ellenőrzi, hogy létezik-e a kapott id-val elem az adatbázisban. Ha igen, akkor megváltoztatja az issigned értékét."
+        )]
+        [Route("{id}/sign")]
+        [HttpPatch]
+        [SwaggerResponse(StatusCodes.Status200OK, "A szerződés sikeresen megváltoztatva.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Nincs ilyen elem az adatbázisban.")]
+        public async Task<ActionResult<ContractDto>> ModifySigned(int id)
+        {
+            var contract = await contractService.ModifySignedAsync(id);
+            return Ok(contract);
+        }
     }
 }

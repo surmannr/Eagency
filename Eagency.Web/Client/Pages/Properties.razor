@@ -1,0 +1,87 @@
+﻿@page "/properties"
+@inject IHttpClientFactory HttpClientFactory
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Properties</MudText>
+
+@if (PropertiesList != null && PropertiesList.Results != null && PropertiesList.Results.Count() != 0)
+{
+    <div class="row">
+
+        @foreach (var property in PropertiesList.Results)
+        {
+            <div class="col-md-2 mb-5">
+                <MudCard>
+
+                    <MudCardMedia Image="@(property.ImageName)" Height="200" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">@property.City, @property.Country</MudText>
+                        <MudText Typo="Typo.body2">@property.Area km<sup>2</sup></MudText>
+                        <MudText Typo="Typo.body2">@property.HouseType.GetDisplayName()</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </div>
+        }
+
+
+    </div>
+    <div class="d-flex justify-content-around">
+        @if (PageNumber == 1)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" Color="Color.Secondary" Disabled="true"></MudIconButton>
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" Color="Color.Secondary" OnClick="c => PageLeft()"></MudIconButton>
+        }
+        @if (PropertiesList.Results.Count() < PageSize)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" Color="Color.Secondary" Disabled="true"></MudIconButton>
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" Color="Color.Secondary" OnClick="c => PageRight()"></MudIconButton>
+        }
+
+    </div>
+}
+
+@code {
+    PagedResult<PropertyDto> PropertiesList { get; set; } = new PagedResult<PropertyDto>();
+
+    public int PageSize { get; set; } = 12;
+    public int PageNumber { get; set; } = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber=1");
+        foreach (var prop in PropertiesList.Results)
+        {
+            prop.ImageName = "images/" + prop.ImageName;
+        }
+    }
+
+    public async Task PageLeft()
+    {
+        PageNumber--;
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        PropertiesList = new PagedResult<PropertyDto>();
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber={PageNumber}");
+        foreach (var prop in PropertiesList.Results)
+        {
+            prop.ImageName = "images/" + prop.ImageName;
+        }
+    }
+
+    public async Task PageRight()
+    {
+        PageNumber++;
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        PropertiesList = new PagedResult<PropertyDto>();
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber={PageNumber}");
+        foreach (var prop in PropertiesList.Results)
+        {
+            prop.ImageName = "images/" + prop.ImageName;
+        }
+    }
+}

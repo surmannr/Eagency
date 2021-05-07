@@ -22,6 +22,7 @@ namespace Eagency.Dal.EntityConfigurations
                     Date = DateTimeOffset.Now.AddDays(13),
                     FeePercentage = 0.28,
                     IsPaid = false,
+                    IsSigned = false,
                     PaymentFrequency = 2,
                     PaymentMethod = PaymentMethod.BankTransfer,
                     PropertyId = 3
@@ -33,6 +34,7 @@ namespace Eagency.Dal.EntityConfigurations
                     Date = DateTimeOffset.Now.AddDays(5),
                     FeePercentage = 0.58,
                     IsPaid = true,
+                    IsSigned = true,
                     PaymentFrequency = 3,
                     PaymentMethod = PaymentMethod.Cash,
                     PropertyId = 5
@@ -44,6 +46,7 @@ namespace Eagency.Dal.EntityConfigurations
                     Date = DateTimeOffset.Now.AddDays(27),
                     FeePercentage = 0.39,
                     IsPaid = true,
+                    IsSigned = false,
                     PaymentFrequency = 5,
                     PaymentMethod = PaymentMethod.Creditcard,
                     PropertyId = 1

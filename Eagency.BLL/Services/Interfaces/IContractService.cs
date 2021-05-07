@@ -15,6 +15,7 @@ namespace Eagency.BLL.Services.Interfaces
         Task<ContractDto> CreateAsync(ContractDto create);
         Task DeleteAsync(int id);
         Task<ContractDto> ModifyPaidAsync(int id, bool ispaid);
+        Task<ContractDto> ModifySignedAsync(int id);
 
     }
 }

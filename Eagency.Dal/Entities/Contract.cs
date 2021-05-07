@@ -21,6 +21,7 @@ namespace Eagency.Dal.Entities
         [Required]
         public int PaymentFrequency { get; set; }
         public bool IsPaid { get; set; }
+        public bool IsSigned { get; set; }
 
         [ForeignKey(nameof(Property))]
         public int PropertyId { get; set; }

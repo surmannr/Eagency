@@ -1,6 +1,8 @@
 ﻿using Eagency.BLL.Services.Interfaces;
+using Eagency.Web.Shared.Contants;
 using Eagency.Web.Shared.Dto;
 using Eagency.Web.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

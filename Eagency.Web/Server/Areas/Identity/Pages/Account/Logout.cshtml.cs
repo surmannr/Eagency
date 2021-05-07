@@ -37,7 +37,7 @@ namespace Eagency.Web.Server.Areas.Identity.Pages.Account
             }
             else
             {
-                return RedirectToPage();
+                return Redirect("/");
             }
         }
     }

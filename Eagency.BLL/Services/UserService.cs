@@ -44,6 +44,16 @@ namespace Eagency.BLL.Services
             return mapper.Map<UserDto>(user);
         }
 
+        public async Task<User> GetByIdModelAsync(string id)
+        {
+            var user = await db.Users.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new DbNullException();
+            }
+            return user;
+        }
+
         public async Task<UserDto> CreateCustomerAsync(UserDto create)
         {
             if (CheckEntity(create))

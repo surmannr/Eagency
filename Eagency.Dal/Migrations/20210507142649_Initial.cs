@@ -267,6 +267,7 @@ namespace Eagency.Dal.Migrations
                     FeePercentage = table.Column<double>(type: "float", nullable: false),
                     PaymentFrequency = table.Column<int>(type: "int", nullable: false),
                     IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    IsSigned = table.Column<bool>(type: "bit", nullable: false),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -292,8 +293,8 @@ namespace Eagency.Dal.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "Agent", "e4b94103-4e2c-47e8-85d3-414df54c6f5e", "Agent", "AGENT" },
-                    { "Customer", "4aed8cf5-b0d2-4191-b9f8-1c08494bab07", "Customer", "CUSTOMER" }
+                    { "Agent", "c41917e3-ba41-444d-8ead-703f9167c5c6", "Agent", "AGENT" },
+                    { "Customer", "6ee21c8b-6202-4538-8014-660abcf4d7fc", "Customer", "CUSTOMER" }
                 });
 
             migrationBuilder.InsertData(
@@ -301,10 +302,10 @@ namespace Eagency.Dal.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "seedone", 0, "10755baa-b300-4710-9252-3b4d351e559c", "tesztelek@gmail.com", true, "Teszt", "Elek", false, null, "TESZTELEK@GMAIL.COM", "TESZTELEK", "AQAAAAEAACcQAAAAENiBy17Q+0scN6+fMr0dxCo57PM23vJRwW4cOt372pcZSZrX5RdDgAX3TvmlS4wK4w==", "06/30-152-5123", false, "cc420f05-b245-422a-b88b-1e9a257bff0b", false, "tesztelek" },
-                    { "seedtwo", 0, "7c03e1c9-1ffe-4b1c-87f9-d64ba932ac1f", "wincheszter@gmail.com", true, "Winch", "Eszter", false, null, "WINCHESZTER@GMAIL.COM", "WINCHESZTER", "AQAAAAEAACcQAAAAEJYPNyNcSIioKtjgvTMLLIkuDPAaVysdWpMNRkESqSiFw6I/w3pqB4zcCyGGRuR5cw==", "06/30-152-5123", false, "ad944ff5-bb7b-42cd-9d71-5c3faff1ed08", false, "wincheszter" },
-                    { "seedthree", 0, "370cf52c-df10-4194-ae86-00ff40fe2895", "kbela@gmail.com", true, "Kis", "Béla", false, null, "KBELA@GMAIL.COM", "KBELA", "AQAAAAEAACcQAAAAEFJWS3OmZJc+RZviLNsZWaMFz2Kpl7JOQQWgkJFIrlRzNQEcImURV6vvbdj4dyu4zg==", "06/30-152-5123", false, "253854a0-189e-40e9-a093-b8e6ecc9c8b4", false, "kbela" },
-                    { "admin", 0, "0bc542f7-6b4c-4418-a197-9103a69828e5", "admin@eagency.com", true, "Admin", "Admin", false, null, "ADMIN@EAGENCY.COM", "ADMIN", "AQAAAAEAACcQAAAAEJtrAemYiVRluAowfkMtXYX/OXI0tk35tAtg1WzgMr/1UIk8hrr6fgbMIX0dV34HgQ==", "06/30-152-5123", false, "b034641f-c47e-43ea-a63f-2e2e0adb9c67", false, "admin" }
+                    { "seedone", 0, "f3908db0-891f-413e-980f-5d1b7e5c738e", "tesztelek@gmail.com", true, "Teszt", "Elek", false, null, "TESZTELEK@GMAIL.COM", "TESZTELEK", "AQAAAAEAACcQAAAAEEec8SmSRa6XfWsmj+K6J0Zchsk0Kl2Bs0xF1BWPHzTIwJK47q+Xq/nxTGA0vg8pdg==", "06/30-152-5123", false, "421601e6-8fa0-43d0-a5bc-079cd3efd547", false, "tesztelek" },
+                    { "seedtwo", 0, "68665a5e-5e9a-4e6a-b5db-767a708ecce2", "wincheszter@gmail.com", true, "Winch", "Eszter", false, null, "WINCHESZTER@GMAIL.COM", "WINCHESZTER", "AQAAAAEAACcQAAAAEAOfK4QL73EQk5EXKRt08LvOvFkSyF6KNE9lRisyNZI/VIl21Qhq0BNXFW4T/WmhYg==", "06/30-152-5123", false, "3a5a7329-91a1-45f6-9c36-d38049439f86", false, "wincheszter" },
+                    { "seedthree", 0, "09c8f835-1ca4-4333-8c39-c2557e4c00a2", "kbela@gmail.com", true, "Kis", "Béla", false, null, "KBELA@GMAIL.COM", "KBELA", "AQAAAAEAACcQAAAAECOx0lOR3fq95DtrPRhPo4XopMSKJl0vs6/q8ce31vXK9HDqSDy1f+h+bY1eX+jCGw==", "06/30-152-5123", false, "3d2fef9a-e7d0-4593-a242-03e49ccbfa13", false, "kbela" },
+                    { "admin", 0, "eb865abc-e495-4cad-9378-d009f78358cd", "admin@eagency.com", true, "Admin", "Admin", false, null, "ADMIN@EAGENCY.COM", "ADMIN", "AQAAAAEAACcQAAAAEPKRK+3IMa5rksNj+H3fmF873jJ655E7xM9x+WD5SHtpEnpI38EtI88o4TwydWUqGw==", "06/30-152-5123", false, "d40b8cb5-f773-4043-a716-3c666484a61e", false, "admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -338,28 +339,28 @@ namespace Eagency.Dal.Migrations
                 columns: new[] { "Id", "Answer", "Date", "PropertyId", "Question", "UserId" },
                 values: new object[,]
                 {
-                    { 4, "It's one year old.", new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8301), new TimeSpan(0, 2, 0, 0, 0)), 4, "How old is the roof?", "seedone" },
-                    { 3, "He has a new job in another town.", new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8296), new TimeSpan(0, 2, 0, 0, 0)), 3, "Why is the seller leaving?", "seedthree" },
-                    { 11, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8327), new TimeSpan(0, 2, 0, 0, 0)), 3, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
-                    { 2, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8268), new TimeSpan(0, 2, 0, 0, 0)), 2, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
-                    { 10, "It's one year old.", new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8323), new TimeSpan(0, 2, 0, 0, 0)), 2, "How old is the roof?", "seedone" },
-                    { 1, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 272, DateTimeKind.Unspecified).AddTicks(7826), new TimeSpan(0, 2, 0, 0, 0)), 1, "Are there any shops nearby?", "seedone" },
-                    { 9, "He has a new job in another town.", new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8319), new TimeSpan(0, 2, 0, 0, 0)), 1, "Why is the seller leaving?", "seedthree" },
-                    { 5, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8305), new TimeSpan(0, 2, 0, 0, 0)), 5, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
-                    { 6, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8308), new TimeSpan(0, 2, 0, 0, 0)), 6, "How is the neighborhood?", "seedthree" },
-                    { 12, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8330), new TimeSpan(0, 2, 0, 0, 0)), 6, "How is the neighborhood?", "seedthree" },
-                    { 7, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8312), new TimeSpan(0, 2, 0, 0, 0)), 7, "Have there been previous problems with the house, or repairs which have been necessary?", "seedone" },
-                    { 8, null, new DateTimeOffset(new DateTime(2021, 5, 29, 21, 17, 16, 274, DateTimeKind.Unspecified).AddTicks(8316), new TimeSpan(0, 2, 0, 0, 0)), 8, "What’s included with the sale?", "seedtwo" }
+                    { 4, "It's one year old.", new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5436), new TimeSpan(0, 2, 0, 0, 0)), 4, "How old is the roof?", "seedone" },
+                    { 3, "He has a new job in another town.", new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5430), new TimeSpan(0, 2, 0, 0, 0)), 3, "Why is the seller leaving?", "seedthree" },
+                    { 11, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5463), new TimeSpan(0, 2, 0, 0, 0)), 3, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
+                    { 2, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5399), new TimeSpan(0, 2, 0, 0, 0)), 2, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
+                    { 10, "It's one year old.", new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5460), new TimeSpan(0, 2, 0, 0, 0)), 2, "How old is the roof?", "seedone" },
+                    { 1, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 624, DateTimeKind.Unspecified).AddTicks(3340), new TimeSpan(0, 2, 0, 0, 0)), 1, "Are there any shops nearby?", "seedone" },
+                    { 9, "He has a new job in another town.", new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5456), new TimeSpan(0, 2, 0, 0, 0)), 1, "Why is the seller leaving?", "seedthree" },
+                    { 5, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5440), new TimeSpan(0, 2, 0, 0, 0)), 5, "Is the home in a flood zone or prone to other natural disasters?", "seedtwo" },
+                    { 6, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5444), new TimeSpan(0, 2, 0, 0, 0)), 6, "How is the neighborhood?", "seedthree" },
+                    { 12, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5467), new TimeSpan(0, 2, 0, 0, 0)), 6, "How is the neighborhood?", "seedthree" },
+                    { 7, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5448), new TimeSpan(0, 2, 0, 0, 0)), 7, "Have there been previous problems with the house, or repairs which have been necessary?", "seedone" },
+                    { 8, null, new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5452), new TimeSpan(0, 2, 0, 0, 0)), 8, "What’s included with the sale?", "seedtwo" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Contracts",
-                columns: new[] { "Id", "ClientId", "Date", "FeePercentage", "IsPaid", "PaymentFrequency", "PaymentMethod", "PropertyId" },
+                columns: new[] { "Id", "ClientId", "Date", "FeePercentage", "IsPaid", "IsSigned", "PaymentFrequency", "PaymentMethod", "PropertyId" },
                 values: new object[,]
                 {
-                    { 1, "seedone", new DateTimeOffset(new DateTime(2021, 5, 19, 21, 17, 16, 275, DateTimeKind.Unspecified).AddTicks(1905), new TimeSpan(0, 2, 0, 0, 0)), 0.28000000000000003, false, 2, "BankTransfer", 3 },
-                    { 3, "seedthree", new DateTimeOffset(new DateTime(2021, 6, 2, 21, 17, 16, 275, DateTimeKind.Unspecified).AddTicks(3868), new TimeSpan(0, 2, 0, 0, 0)), 0.39000000000000001, true, 5, "Creditcard", 1 },
-                    { 2, "seedtwo", new DateTimeOffset(new DateTime(2021, 5, 11, 21, 17, 16, 275, DateTimeKind.Unspecified).AddTicks(3854), new TimeSpan(0, 2, 0, 0, 0)), 0.57999999999999996, true, 3, "Cash", 5 }
+                    { 1, "seedone", new DateTimeOffset(new DateTime(2021, 5, 20, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(9008), new TimeSpan(0, 2, 0, 0, 0)), 0.28000000000000003, false, false, 2, "BankTransfer", 3 },
+                    { 3, "seedthree", new DateTimeOffset(new DateTime(2021, 6, 3, 16, 26, 48, 627, DateTimeKind.Unspecified).AddTicks(822), new TimeSpan(0, 2, 0, 0, 0)), 0.39000000000000001, true, false, 5, "Creditcard", 1 },
+                    { 2, "seedtwo", new DateTimeOffset(new DateTime(2021, 5, 12, 16, 26, 48, 627, DateTimeKind.Unspecified).AddTicks(808), new TimeSpan(0, 2, 0, 0, 0)), 0.57999999999999996, true, true, 3, "Cash", 5 }
                 });
 
             migrationBuilder.CreateIndex(
