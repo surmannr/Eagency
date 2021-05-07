@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.Web.Client", "Eagen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.Web.Shared", "Eagency.Web\Shared\Eagency.Web.Shared.csproj", "{25985EDC-2E95-46F6-92FB-278C5BDBEB91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eagency.Dal", "Eagency.Dal\Eagency.Dal.csproj", "{5855D694-E4F0-40EF-A81D-95C068F01095}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.Dal", "Eagency.Dal\Eagency.Dal.csproj", "{5855D694-E4F0-40EF-A81D-95C068F01095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eagency.BLL", "Eagency.BLL\Eagency.BLL.csproj", "{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.BLL", "Eagency.BLL\Eagency.BLL.csproj", "{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

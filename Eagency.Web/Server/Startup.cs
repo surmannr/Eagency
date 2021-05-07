@@ -91,18 +91,18 @@ namespace Eagency.Web.Server
                 //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 //c.IncludeXmlComments(xmlPath);
             });
-
+    
             services.AddScoped<ICommentService, CommentService>()
                     .AddScoped<IPropertyService, PropertyService>()
                     .AddScoped<IContractService, ContractService>()
                     .AddScoped<IUserService, UserService>();
-
+      
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
             services.AddProblemDetails(ConfigureProblemDetails).AddControllers()
                 .AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
-
+     
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -144,7 +144,7 @@ namespace Eagency.Web.Server
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Eagency");
                 c.RoutePrefix = "swagger";
             });
-
+        
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
@@ -152,14 +152,14 @@ namespace Eagency.Web.Server
                 endpoints.MapFallbackToFile("index.html");
             });
         }
-        private void ConfigureProblemDetails(ProblemDetailsOptions options)
-        {
-            // DbNullException -> NotFound : Ha nem találja meg az adott entitást, akkor NotFound-dal tér vissza.
-            options.MapToStatusCode<DbNullException>(StatusCodes.Status404NotFound);
-            // InvalidQueryParamsException -> BadRequest : Ha a kötelezõ paraméterek nincsenek kitöltve (azaz null), akkor BadRequest-tel tér vissza.
-            options.MapToStatusCode<InvalidQueryParamsException>(StatusCodes.Status400BadRequest);
+          private void ConfigureProblemDetails(ProblemDetailsOptions options)
+          {
+              // DbNullException -> NotFound : Ha nem találja meg az adott entitást, akkor NotFound-dal tér vissza.
+              options.MapToStatusCode<DbNullException>(StatusCodes.Status404NotFound);
+              // InvalidQueryParamsException -> BadRequest : Ha a kötelezõ paraméterek nincsenek kitöltve (azaz null), akkor BadRequest-tel tér vissza.
+              options.MapToStatusCode<InvalidQueryParamsException>(StatusCodes.Status400BadRequest);
 
-            options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
-        }
+              options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
+        } 
     }
 }
