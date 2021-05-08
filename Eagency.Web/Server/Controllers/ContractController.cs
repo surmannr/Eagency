@@ -2,6 +2,7 @@
 using Eagency.Web.Shared.Dto;
 using Eagency.Web.Shared.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -85,9 +86,9 @@ namespace Eagency.Web.Server.Controllers
         [HttpPatch]
         [SwaggerResponse(StatusCodes.Status200OK, "A szerződés sikeresen megváltoztatva.")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Nincs ilyen elem az adatbázisban.")]
-        public async Task<ActionResult<ContractDto>> ModifyPaid(int id, [FromQuery] bool ispad)
+        public async Task<ActionResult<ContractDto>> ModifyPaid(int id, [FromQuery] bool ispaid)
         {
-            var contract = await contractService.ModifyPaidAsync(id, ispad);
+            var contract = await contractService.ModifyPaidAsync(id, ispaid);
             return Ok(contract);
         }
 

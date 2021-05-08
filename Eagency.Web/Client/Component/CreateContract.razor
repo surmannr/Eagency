@@ -1,0 +1,108 @@
+﻿@page "/create-contract"
+@layout AdminLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+@inject AuthenticationStateProvider AuthState
+@using Eagency.Web.Shared.Enums
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Create an agent</MudText>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-8">
+        <MudCard>
+            <MudCardContent>
+                <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                    <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!" @bind-Value="Email"
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                    <MudSelect T="PaymentMethod" @bind-Value="@newContract.PaymentMethod" Label="Select payment method" Variant="Variant.Outlined" ToStringFunc="@converter" OffsetY="true">
+                        <MudSelectItem Value="@(PaymentMethod.BankTransfer)" />
+                        <MudSelectItem Value="@(PaymentMethod.Cash)" />
+                        <MudSelectItem Value="@(PaymentMethod.Creditcard)" />
+                    </MudSelect>
+                    <MudNumericField Min="0" Max="1"  T="double" Label="Fee percentage" Required="true" RequiredError="Fee percentage is required!" @bind-Value="@newContract.FeePercentage" />
+                    <MudNumericField Min="0" T="int" Label="Payment frequency" Required="true" RequiredError="Payment frequency is required!" @bind-Value="@newContract.PaymentFrequency" />
+                    <MudNumericField Min="0" T="int" Label="Property id" Required="true" RequiredError="Property id is required!" @bind-Value="@newContract.PropertyId" />
+                </MudForm>
+            </MudCardContent>
+            <MudCardActions Class="d-flex flex-column">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" FullWidth="true" Style="margin-bottom:10px" OnClick="CreateNewContract">Create a new contract</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Back">Cancel</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        <MudPaper Class="pa-4 justify-center my-4 mud-text-align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>form.Validate())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@(()=>form.Reset())" Class="mx-2">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+        </MudPaper>
+
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")">
+                @foreach (var error in errors)
+                {
+                    <MudText Color="@Color.Error">@error</MudText>
+                }
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </div>
+</div>
+
+
+@code {
+    bool success;
+    string[] errors = { };
+    MudForm form;
+
+    ContractDto newContract { get; set; } = new ContractDto();
+    string Email { get; set; }
+
+    Func<PaymentMethod, string> converter = p => p.GetDisplayName();
+
+    public async Task CreateNewContract()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+
+        newContract.Date = DateTimeOffset.Now;
+        newContract.IsPaid = false;
+        newContract.IsSigned = false;
+
+        var emailresult = await http.GetFromJsonAsync<UserDto>($"api/User/email/{Email}");
+        if(emailresult == null)
+        {
+            Snackbar.Add("Error: can't find user by this email.", Severity.Error);
+            return;
+        }
+        newContract.ClientId = emailresult.Id;
+
+        var propertyresult = await http.GetFromJsonAsync<PropertyDto>($"api/Property/{newContract.PropertyId}");
+        if (propertyresult == null)
+        {
+            Snackbar.Add("Error: can't find user by this email.", Severity.Error);
+            return;
+        }
+
+        var result = await http.PostAsJsonAsync($"api/Contract", newContract);
+        if (result.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Successful contract creation.", Severity.Success);
+            await Task.Delay(1000);
+            uriHelper.NavigateTo("/manage-contracts", forceLoad: true);
+        }
+        else
+        {
+            Snackbar.Add("Error: can not create the new contract.", Severity.Error);
+        }
+    }
+
+    public void Back()
+    {
+        uriHelper.NavigateTo("/manage-contracts");
+    }
+
+   
+
+}

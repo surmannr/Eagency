@@ -48,6 +48,20 @@ namespace Eagency.Web.Server.Controllers
         }
 
         [SwaggerOperation(
+               Summary = "Egy felhasználó lekérdezése email alapján.",
+               Description = "Ha nem található az adatbázisban a kapott emaillel rendelkező elem, akkor hibát dob, egyébként visszaadja a megfelelőt."
+        )]
+        [Route("email/{email}")]
+        [HttpGet]
+        [SwaggerResponse(StatusCodes.Status200OK, "A felhasználó sikeresen lekérdezve.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Nincs ilyen elem az adatbázisban.")]
+        public async Task<ActionResult<UserDto>> GetByEmail(string email)
+        {
+            var user = await userService.GetByEmailAsync(email);
+            return Ok(user);
+        }
+
+        [SwaggerOperation(
                Summary = "Vásárló létrehozása.",
                Description = "A kapott entitás paramétereit ellenőrzi és ha nem felel meg a követelményeknek akkor hibát dob, egyébként létrehozza az új entitást."
         )]

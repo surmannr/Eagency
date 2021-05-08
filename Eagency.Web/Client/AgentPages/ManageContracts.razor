@@ -1,5 +1,120 @@
-﻿<h3>ManageContracts</h3>
+﻿@page "/manage-contracts"
+@layout AdminLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
 
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Properties</MudText>
+
+<MudTable Items="@ContractsList" Hover="true" Filter="new Func<ContractDto,bool>(FilterFunc)" @bind-SelectedItem="SelectedContract" SortLabel="Sort By" >
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Contracts</MudText>
+        <MudToolBarSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.AgentName)">Agent name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.ClientName)">Client name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.FeePercentage)">Fee percentage</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.PaymentFrequency)">Payment frequency</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.PaymentMethod)">Payment method</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.IsSigned)">Signed</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.IsPaid)">Paid</MudTableSortLabel></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Agent name">@context.AgentName</MudTd>
+        <MudTd DataLabel="Client name">@context.ClientName</MudTd>
+        <MudTd DataLabel="Date">@context.Date.ToString("yyyy.MM.dd.")</MudTd>
+        <MudTd DataLabel="Fee percentage">@context.FeePercentage.ToString("P2")</MudTd>
+        <MudTd DataLabel="Payment frequency">@context.PaymentFrequency.ToString() month</MudTd>
+        <MudTd DataLabel="Payment method">@context.PaymentMethod.GetDisplayName()</MudTd>
+        <MudTd DataLabel="Signed"><MudCheckBox @bind-Checked="@context.IsSigned" ReadOnly="true"></MudCheckBox></MudTd>
+        <MudTd DataLabel="Paid"><MudCheckBox @bind-Checked="@context.IsPaid" ReadOnly="true"></MudCheckBox></MudTd>
+        <MudTd DataLabel="Ikonok">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="() => Remove(context)" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="ToCreate">Create new contract</MudButton>
 @code {
+    List<ContractDto> ContractsList { get; set; } = new List<ContractDto>();
 
+    ContractDto SelectedContract { get; set; } = new ContractDto();
+
+    string searchString { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        ContractsList = await http.GetFromJsonAsync<List<ContractDto>>($"api/Contract");
+    }
+
+
+    public async Task Remove(ContractDto contract)
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Delete",
+            $"Are you sure you want to delete #{contract.Id} contract?",
+            yesText: "Yes", cancelText: "Cancel");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.DeleteAsync($"api/Contract/{contract.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfull operation - delete.", Severity.Success);
+                ContractsList.Remove(contract);
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add("Error: you can't delete this item!", Severity.Error);
+            }
+        }
+    }
+
+    private bool FilterFunc(ContractDto element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.FeePercentage.ToString("P2").Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.PaymentMethod.GetDisplayName().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.PaymentFrequency.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.IsPaid.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.IsSigned.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Date.ToString("yyyy.MM.DD.").Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.ClientName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.AgentName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    public void ToCreate()
+    {
+        uriHelper.NavigateTo("/create-contract");
+    }
 }

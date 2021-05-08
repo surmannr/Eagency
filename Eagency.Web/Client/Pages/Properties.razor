@@ -53,8 +53,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
-        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber=1");
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber=1");
         foreach (var prop in PropertiesList.Results)
         {
             prop.ImageName = "images/" + prop.ImageName;
@@ -64,9 +64,9 @@
     public async Task PageLeft()
     {
         PageNumber--;
-        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
         PropertiesList = new PagedResult<PropertyDto>();
-        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber={PageNumber}");
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber={PageNumber}");
         foreach (var prop in PropertiesList.Results)
         {
             prop.ImageName = "images/" + prop.ImageName;
@@ -76,9 +76,9 @@
     public async Task PageRight()
     {
         PageNumber++;
-        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
         PropertiesList = new PagedResult<PropertyDto>();
-        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/page?pagesize={PageSize}&pagenumber={PageNumber}");
+        PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber={PageNumber}");
         foreach (var prop in PropertiesList.Results)
         {
             prop.ImageName = "images/" + prop.ImageName;

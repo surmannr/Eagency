@@ -1,5 +1,163 @@
-﻿<h3>Properties</h3>
+﻿@page "/manage-properties"
+@layout AdminLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Properties</MudText>
+
+<MudTable Items="@PropertiesList" Hover="true" Filter="new Func<PropertyDto,bool>(FilterFunc)" @bind-SelectedItem="SelectedProperty" SortLabel="Sort By" CommitEditTooltip="Commit Edit" OnCommitEditClick="@Save">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Properties</MudText>
+        <MudToolBarSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PropertyDto, object>(x=>x.Country)">Country</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PropertyDto, object>(x=>x.City)">City</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PropertyDto, object>(x=>x.ImageName)">Imagename</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PropertyDto, object>(x=>x.Sold)">Sold</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PropertyDto, object>(x=>x.IsFurnished)">Furnished</MudTableSortLabel></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Country">@context.Country</MudTd>
+        <MudTd DataLabel="City">@context.City</MudTd>
+        <MudTd DataLabel="Imagename">@context.ImageName</MudTd>
+        <MudTd DataLabel="Sold"><MudCheckBox @bind-Checked="@context.Sold" ReadOnly="true"></MudCheckBox></MudTd>
+        <MudTd DataLabel="Furnished"><MudCheckBox @bind-Checked="@context.IsFurnished" ReadOnly="true"></MudCheckBox></MudTd>
+        <MudTd DataLabel="Ikonok">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="() => Remove(context)" />
+        </MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Id">@SelectedProperty.Id</MudTd>
+        <MudTd DataLabel="Country">
+            <MudTextField @bind-Value="@SelectedProperty.Country" Required />
+        </MudTd>
+        <MudTd DataLabel="City">
+            <MudTextField @bind-Value="@SelectedProperty.City" Required />
+        </MudTd>
+        <MudTd DataLabel="Imagename">
+            <MudTextField @bind-Value="@SelectedProperty.ImageName" Required />
+        </MudTd>
+        <MudTd DataLabel="Sold">
+            <MudCheckBox @bind-Checked="@SelectedProperty.Sold"></MudCheckBox>
+        </MudTd>
+        <MudTd DataLabel="Furnished">
+            <MudCheckBox @bind-Checked="@SelectedProperty.IsFurnished"></MudCheckBox>
+        </MudTd>
+    </RowEditingTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
+    List<PropertyDto> PropertiesList { get; set; } = new List<PropertyDto>();
 
+    PropertyDto SelectedProperty { get; set; } = new PropertyDto();
+
+    string searchString { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        PropertiesList = await http.GetFromJsonAsync<List<PropertyDto>>($"api/Property");
+    }
+
+    public async void Save()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Save",
+            $"Are you sure you want to save #{SelectedProperty.Id} property?",
+            yesText: "Yes", cancelText: "Cancel");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PutAsJsonAsync($"api/Property/{SelectedProperty.Id}", SelectedProperty);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successful modification", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: you can't modify this item!", Severity.Error);
+                var ev = PropertiesList.Where(x => x.Id == SelectedProperty.Id).FirstOrDefault();
+                if (ev != null) ev = await http.GetFromJsonAsync<PropertyDto>($"api/Property/{SelectedProperty.Id}");
+                else
+                {
+                    Snackbar.Add("Error: you can't modify this item!", Severity.Error);
+                }
+                await Task.Delay(1000);
+                uriHelper.NavigateTo(uriHelper.Uri, true);
+            }
+        }
+        else
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var ev = PropertiesList.Where(x => x.Id == SelectedProperty.Id).FirstOrDefault();
+            if (ev != null) ev = await http.GetFromJsonAsync<PropertyDto>($"api/Property/{SelectedProperty.Id}");
+            else
+            {
+                Snackbar.Add("Error: you can't modify this item!", Severity.Error);
+            }
+            await Task.Delay(1000);
+            uriHelper.NavigateTo(uriHelper.Uri, true);
+        }
+
+    }
+
+
+    public async Task Remove(PropertyDto property)
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Delete",
+            $"Are you sure you want to delete #{property.Id} property?",
+            yesText: "Yes", cancelText: "Cancel");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.DeleteAsync($"api/Property/{property.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfull operation - delete.", Severity.Success);
+                PropertiesList.Remove(property);
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add("Error: you can't delete this item!", Severity.Error);
+            }
+        }
+    }
+
+    private bool FilterFunc(PropertyDto element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.City.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.ImageName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Sold.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.IsFurnished.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 }

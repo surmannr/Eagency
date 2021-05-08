@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Eagency.Web.Server
 {
@@ -44,12 +45,23 @@ namespace Eagency.Web.Server
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<EagencyDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddClaimsPrincipalFactory<MyUserClaimsPrincipalFactory>();
 
             services.AddAutoMapper(typeof(MapProfile));
 
+            services.AddScoped<IClaimsTransformation, MyClaimTransformation>();
+
             services.AddIdentityServer()
-                .AddApiAuthorization<User, EagencyDbContext>();
+                .AddApiAuthorization<User, EagencyDbContext>(opt =>
+                {
+                    opt.IdentityResources["openid"].UserClaims.Add("AllName");
+                    opt.IdentityResources["openid"].UserClaims.Add(ClaimTypes.Name);
+                    opt.IdentityResources["openid"].UserClaims.Add(ClaimTypes.Email);
+                    opt.IdentityResources["openid"].UserClaims.Add(ClaimTypes.NameIdentifier);
+                    opt.IdentityResources["openid"].UserClaims.Add(ClaimTypes.Role);
+
+                });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -91,7 +103,9 @@ namespace Eagency.Web.Server
                 //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 //c.IncludeXmlComments(xmlPath);
             });
-    
+
+           
+
             services.AddScoped<ICommentService, CommentService>()
                     .AddScoped<IPropertyService, PropertyService>()
                     .AddScoped<IContractService, ContractService>()
@@ -105,6 +119,11 @@ namespace Eagency.Web.Server
      
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AgentPolicy", policy => policy.RequireRole(ClaimTypes.Role, "Agent"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

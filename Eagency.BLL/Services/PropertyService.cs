@@ -61,6 +61,26 @@ namespace Eagency.BLL.Services
             return result;
         }
 
+        public async Task<PagedResult<PropertyDto>> GetAllAvailablePagedAsync(int pagesize, int pagenumber)
+        {
+            if (pagesize < 0 || pagenumber < 0)
+            {
+                throw new InvalidQueryParamsException();
+            }
+
+            PagedResult<PropertyDto> result = new PagedResult<PropertyDto>();
+
+            var properties = await db.Properties.OrderBy(c => c.Id).Where(c => c.Sold == false).Paging(pagesize, pagenumber).ToListAsync();
+            var count = await db.Properties.Where(c => c.Sold == false).CountAsync();
+
+            result.Results = mapper.Map<IEnumerable<PropertyDto>>(properties);
+            result.PageSize = pagesize;
+            result.PageNumber = pagenumber;
+            result.AllResultsCount = count;
+
+            return result;
+        }
+
         public async Task<PropertyDto> CreateAsync(PropertyDto create)
         {
             if (CheckEntity(create))

@@ -31,7 +31,20 @@ namespace Eagency.BLL.Services
         public async Task<List<UserDto>> GetAllAsync()
         {
             var users = await db.Users.ToListAsync();
-            return mapper.Map<List<UserDto>>(users);
+            var userdto = mapper.Map<List<UserDto>>(users);
+
+            foreach(var user in userdto)
+            {
+                var usertemp = users.Where(c => c.Id == user.Id).FirstOrDefault();
+                if(usertemp!= null)
+                {
+                    var roles = await userManager.GetRolesAsync(usertemp);
+                    user.Role = roles[0];
+                }
+
+            }
+
+            return userdto;
         }
 
         public async Task<UserDto> GetByIdAsync(string id)
@@ -220,6 +233,16 @@ namespace Eagency.BLL.Services
             if (string.IsNullOrEmpty(user.UserName)) return false;
             if (string.IsNullOrEmpty(user.Password)) return false;
             return true;
+        }
+
+        public async Task<UserDto> GetByEmailAsync(string email)
+        {
+            var user = await db.Users.Where(p => p.Email == email).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new DbNullException();
+            }
+            return mapper.Map<UserDto>(user);
         }
     }
 }

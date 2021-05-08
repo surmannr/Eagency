@@ -45,7 +45,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
         Properties = await http.GetFromJsonAsync<PagedResult<PropertyDto>>("api/Property/page?pagesize=4&pagenumber=1");
         foreach(var prop in Properties.Results)
         {

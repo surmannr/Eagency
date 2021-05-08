@@ -1,5 +1,100 @@
-﻿<h3>CreateAgent</h3>
+﻿@page "/create-agent"
+@layout AdminLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Create an agent</MudText>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-8">
+        <MudCard>
+            <MudCardContent>
+                <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                    <MudTextField T="string" Label="Username" Required="true" RequiredError="User name is required!" @bind-Value="newUser.UserName" />
+                    <MudTextField T="string" Label="Firstname" Required="true" RequiredError="Firstname is required!"  @bind-Value="newUser.FirstName" />
+                    <MudTextField T="string" Label="Lastname" Required="true" RequiredError="Lastname is required!"  @bind-Value="newUser.LastName" />
+                    <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"  @bind-Value="newUser.Email"
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                    <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                                  InputType="InputType.Password"  @bind-Value="newUser.Password"
+                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                                  RequiredError="Password is required!" />
+                    <MudTextField T="string"
+                                  Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                                  Validation="@(new Func<string, string>(PasswordMatch))" />
+                </MudForm>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" FullWidth="true" OnClick="Register">Register</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        <MudPaper Class="pa-4 justify-center my-4 mud-text-align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>form.Validate())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@(()=>form.Reset())" Class="mx-2">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+        </MudPaper>
+
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")">
+                @foreach (var error in errors)
+                {
+                    <MudText Color="@Color.Error">@error</MudText>
+                }
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </div>
+</div>
+
 
 @code {
+    bool success;
+    string[] errors = { };
+    MudForm form;
+    MudTextField<string> pwField1;
 
+    UserDto newUser { get; set; } = new UserDto();
+
+    public async Task Register()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var result = await http.PostAsJsonAsync($"api/User/admin", newUser);
+        if (result.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Successful agent creation.", Severity.Success);
+            await Task.Delay(1000);
+            uriHelper.NavigateTo("/manage-users", forceLoad: true);
+        } else
+        {
+            Snackbar.Add("Error: can not create the new agent.", Severity.Error);
+        }
+    }
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "Passwords don't match";
+        return null;
+    }
 }

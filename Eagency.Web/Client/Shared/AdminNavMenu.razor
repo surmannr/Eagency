@@ -1,5 +1,7 @@
-﻿<div class="top-row ps-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Eagency.Web</a>
+﻿@attribute [Authorize(Policy = "AgentPolicy")]
+
+<div class="top-row ps-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Eagency.Web Admin</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,26 +9,28 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/properties" Match="NavLinkMatch.All">
-                <i class="bi bi-house-fill"></i> &nbsp;&nbsp;Properties
-            </NavLink>
-        </li>
+
         <AuthorizeView Policy="AgentPolicy">
+
             <Authorized>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="/manage-properties" Match="NavLinkMatch.All">
-                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;Agent site
+                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;Manage properties
                     </NavLink>
                 </li>
-            </Authorized>
-        </AuthorizeView>
-        <AuthorizeView>
-                
-            <Authorized>
                 <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="/mycontracts" Match="NavLinkMatch.All">
-                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;My contracts
+                    <NavLink class="nav-link" href="/manage-contracts" Match="NavLinkMatch.All">
+                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;Manage contracts
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="/manage-users" Match="NavLinkMatch.All">
+                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;Manage users
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="/create-agent" Match="NavLinkMatch.All">
+                        <i class="bi bi-clipboard"></i> &nbsp;&nbsp;Create agent
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
@@ -36,11 +40,7 @@
                 </li>
             </Authorized>
             <NotAuthorized>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
-                        <i class="bi bi-person-circle"></i> &nbsp;&nbsp;Login
-                    </NavLink>
-                </li>
+                <AccessDenied></AccessDenied>
             </NotAuthorized>
         </AuthorizeView>
     </ul>

@@ -12,6 +12,7 @@ namespace Eagency.BLL.Services.Interfaces
     {
         Task<List<UserDto>> GetAllAsync();
         Task<UserDto> GetByIdAsync(string id);
+        Task<UserDto> GetByEmailAsync(string email);
         Task<User> GetByIdModelAsync(string id);
         Task<UserDto> CreateCustomerAsync(UserDto create);
         Task<UserDto> CreateAdminAsync(UserDto create);

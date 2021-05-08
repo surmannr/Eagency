@@ -24,6 +24,9 @@ namespace Eagency.Web.Shared.Dto
 
         public int PropertyId { get; set; }
 
+        public string AgentName { get; set; }
+
         public string ClientId { get; set; }
+        public string ClientName { get; set; }
     }
 }

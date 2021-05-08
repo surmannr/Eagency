@@ -26,6 +26,7 @@ namespace Eagency.Dal.Entities
         [Required]
         public int Area { get; set; }
         public string ImageName { get; set; }
+        public bool Sold { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
 

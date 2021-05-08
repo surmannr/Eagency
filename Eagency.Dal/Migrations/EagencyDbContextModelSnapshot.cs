@@ -56,7 +56,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 624, DateTimeKind.Unspecified).AddTicks(3340), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 412, DateTimeKind.Unspecified).AddTicks(557), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 1,
                             Question = "Are there any shops nearby?",
                             UserId = "seedone"
@@ -64,7 +64,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 2,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5399), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(497), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 2,
                             Question = "Is the home in a flood zone or prone to other natural disasters?",
                             UserId = "seedtwo"
@@ -73,7 +73,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 3,
                             Answer = "He has a new job in another town.",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5430), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(524), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 3,
                             Question = "Why is the seller leaving?",
                             UserId = "seedthree"
@@ -82,7 +82,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 4,
                             Answer = "It's one year old.",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5436), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(530), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 4,
                             Question = "How old is the roof?",
                             UserId = "seedone"
@@ -90,7 +90,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 5,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5440), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(534), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 5,
                             Question = "Is the home in a flood zone or prone to other natural disasters?",
                             UserId = "seedtwo"
@@ -98,7 +98,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 6,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5444), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(538), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 6,
                             Question = "How is the neighborhood?",
                             UserId = "seedthree"
@@ -106,7 +106,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 7,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5448), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(542), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 7,
                             Question = "Have there been previous problems with the house, or repairs which have been necessary?",
                             UserId = "seedone"
@@ -114,7 +114,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 8,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5452), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(546), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 8,
                             Question = "What’s included with the sale?",
                             UserId = "seedtwo"
@@ -123,7 +123,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 9,
                             Answer = "He has a new job in another town.",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5456), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(550), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 1,
                             Question = "Why is the seller leaving?",
                             UserId = "seedthree"
@@ -132,7 +132,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 10,
                             Answer = "It's one year old.",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5460), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(554), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 2,
                             Question = "How old is the roof?",
                             UserId = "seedone"
@@ -140,7 +140,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 11,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5463), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(558), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 3,
                             Question = "Is the home in a flood zone or prone to other natural disasters?",
                             UserId = "seedtwo"
@@ -148,7 +148,7 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = 12,
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(5467), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 30, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(561), new TimeSpan(0, 2, 0, 0, 0)),
                             PropertyId = 6,
                             Question = "How is the neighborhood?",
                             UserId = "seedthree"
@@ -201,7 +201,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 1,
                             ClientId = "seedone",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 20, 16, 26, 48, 626, DateTimeKind.Unspecified).AddTicks(9008), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 20, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(4014), new TimeSpan(0, 2, 0, 0, 0)),
                             FeePercentage = 0.28000000000000003,
                             IsPaid = false,
                             IsSigned = false,
@@ -213,7 +213,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 2,
                             ClientId = "seedtwo",
-                            Date = new DateTimeOffset(new DateTime(2021, 5, 12, 16, 26, 48, 627, DateTimeKind.Unspecified).AddTicks(808), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 5, 12, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(5734), new TimeSpan(0, 2, 0, 0, 0)),
                             FeePercentage = 0.57999999999999996,
                             IsPaid = true,
                             IsSigned = true,
@@ -225,7 +225,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = 3,
                             ClientId = "seedthree",
-                            Date = new DateTimeOffset(new DateTime(2021, 6, 3, 16, 26, 48, 627, DateTimeKind.Unspecified).AddTicks(822), new TimeSpan(0, 2, 0, 0, 0)),
+                            Date = new DateTimeOffset(new DateTime(2021, 6, 3, 17, 15, 17, 414, DateTimeKind.Unspecified).AddTicks(5749), new TimeSpan(0, 2, 0, 0, 0)),
                             FeePercentage = 0.39000000000000001,
                             IsPaid = true,
                             IsSigned = false,
@@ -277,6 +277,9 @@ namespace Eagency.Dal.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Sold")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AgentId");
@@ -297,7 +300,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 3,
                             NumberOfGarages = 1,
                             NumberOfParkingSpaces = 2,
-                            Price = 22000
+                            Price = 22000,
+                            Sold = true
                         },
                         new
                         {
@@ -312,7 +316,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 4,
                             NumberOfGarages = 2,
                             NumberOfParkingSpaces = 1,
-                            Price = 35500
+                            Price = 35500,
+                            Sold = false
                         },
                         new
                         {
@@ -327,7 +332,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 2,
                             NumberOfGarages = 2,
                             NumberOfParkingSpaces = 2,
-                            Price = 17400
+                            Price = 17400,
+                            Sold = true
                         },
                         new
                         {
@@ -342,7 +348,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 4,
                             NumberOfGarages = 0,
                             NumberOfParkingSpaces = 0,
-                            Price = 15000
+                            Price = 15000,
+                            Sold = false
                         },
                         new
                         {
@@ -357,7 +364,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 3,
                             NumberOfGarages = 2,
                             NumberOfParkingSpaces = 0,
-                            Price = 35000
+                            Price = 35000,
+                            Sold = true
                         },
                         new
                         {
@@ -372,7 +380,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 6,
                             NumberOfGarages = 2,
                             NumberOfParkingSpaces = 1,
-                            Price = 45000
+                            Price = 45000,
+                            Sold = false
                         },
                         new
                         {
@@ -387,7 +396,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 2,
                             NumberOfGarages = 2,
                             NumberOfParkingSpaces = 1,
-                            Price = 32700
+                            Price = 32700,
+                            Sold = false
                         },
                         new
                         {
@@ -402,7 +412,8 @@ namespace Eagency.Dal.Migrations
                             NumberOfBedrooms = 2,
                             NumberOfGarages = 1,
                             NumberOfParkingSpaces = 1,
-                            Price = 22600
+                            Price = 22600,
+                            Sold = false
                         });
                 });
 
@@ -485,7 +496,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = "seedone",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f3908db0-891f-413e-980f-5d1b7e5c738e",
+                            ConcurrencyStamp = "708dfbf9-92d7-47b5-9b54-98080c9aa5fa",
                             Email = "tesztelek@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Teszt",
@@ -493,10 +504,10 @@ namespace Eagency.Dal.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TESZTELEK@GMAIL.COM",
                             NormalizedUserName = "TESZTELEK",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEec8SmSRa6XfWsmj+K6J0Zchsk0Kl2Bs0xF1BWPHzTIwJK47q+Xq/nxTGA0vg8pdg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBaplIyrKli0OALWfeBiB+owhkri2ibyT0qE16JooD9Z4UO+E4IgT8781/U2rtEVfA==",
                             PhoneNumber = "06/30-152-5123",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "421601e6-8fa0-43d0-a5bc-079cd3efd547",
+                            SecurityStamp = "5e2084a2-bef7-43d8-967b-67154f09d356",
                             TwoFactorEnabled = false,
                             UserName = "tesztelek"
                         },
@@ -504,7 +515,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = "seedtwo",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "68665a5e-5e9a-4e6a-b5db-767a708ecce2",
+                            ConcurrencyStamp = "1bfaee5f-c965-4287-9ded-5624622f1fa3",
                             Email = "wincheszter@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Winch",
@@ -512,10 +523,10 @@ namespace Eagency.Dal.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WINCHESZTER@GMAIL.COM",
                             NormalizedUserName = "WINCHESZTER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAOfK4QL73EQk5EXKRt08LvOvFkSyF6KNE9lRisyNZI/VIl21Qhq0BNXFW4T/WmhYg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF84StyoGOvic9QyITNOoGPkGAbJ/bjs+2EV84nPAfWWviRs/jsvvydma19ifCAwCg==",
                             PhoneNumber = "06/30-152-5123",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3a5a7329-91a1-45f6-9c36-d38049439f86",
+                            SecurityStamp = "ba87de8c-eae8-468f-9c9e-3db7a3cd3a1a",
                             TwoFactorEnabled = false,
                             UserName = "wincheszter"
                         },
@@ -523,7 +534,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = "seedthree",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "09c8f835-1ca4-4333-8c39-c2557e4c00a2",
+                            ConcurrencyStamp = "e234276d-1979-4185-8cc5-79faaf600aee",
                             Email = "kbela@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Kis",
@@ -531,10 +542,10 @@ namespace Eagency.Dal.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "KBELA@GMAIL.COM",
                             NormalizedUserName = "KBELA",
-                            PasswordHash = "AQAAAAEAACcQAAAAECOx0lOR3fq95DtrPRhPo4XopMSKJl0vs6/q8ce31vXK9HDqSDy1f+h+bY1eX+jCGw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEpvNk2oy5O+blHZpAGQcnUpoozuFZykPXdqp99PQTTlvMROdd7tgYPl657Igih//A==",
                             PhoneNumber = "06/30-152-5123",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3d2fef9a-e7d0-4593-a242-03e49ccbfa13",
+                            SecurityStamp = "eaea9479-2233-4a9f-bc5a-7ebc10841bfb",
                             TwoFactorEnabled = false,
                             UserName = "kbela"
                         },
@@ -542,7 +553,7 @@ namespace Eagency.Dal.Migrations
                         {
                             Id = "admin",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb865abc-e495-4cad-9378-d009f78358cd",
+                            ConcurrencyStamp = "e6a8531b-0513-4ac1-92cd-8767678459d5",
                             Email = "admin@eagency.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -550,10 +561,10 @@ namespace Eagency.Dal.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EAGENCY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPKRK+3IMa5rksNj+H3fmF873jJ655E7xM9x+WD5SHtpEnpI38EtI88o4TwydWUqGw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEjD98l78UHfgT6OUTMxKlSvlXB6q9fLxtB8GmdGDeGB0f9xc7G+N97HvpqHL8ZnVA==",
                             PhoneNumber = "06/30-152-5123",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d40b8cb5-f773-4043-a716-3c666484a61e",
+                            SecurityStamp = "780d894c-408d-4f35-b480-3b1658b216df",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -692,14 +703,14 @@ namespace Eagency.Dal.Migrations
                         new
                         {
                             Id = "Agent",
-                            ConcurrencyStamp = "c41917e3-ba41-444d-8ead-703f9167c5c6",
+                            ConcurrencyStamp = "404f9f5b-aa16-4478-8b94-dbd58546c5e6",
                             Name = "Agent",
                             NormalizedName = "AGENT"
                         },
                         new
                         {
                             Id = "Customer",
-                            ConcurrencyStamp = "6ee21c8b-6202-4538-8014-660abcf4d7fc",
+                            ConcurrencyStamp = "6c272d01-c5ad-4ee3-983c-32528d12945a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

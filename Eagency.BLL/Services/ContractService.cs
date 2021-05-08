@@ -27,7 +27,7 @@ namespace Eagency.BLL.Services
 
         public async Task<IEnumerable<ContractDto>> GetAllAsync()
         {
-            var contracts = await db.Contracts.ToListAsync();
+            var contracts = await db.Contracts.Include(c => c.User).Include(c => c.Property.User).ToListAsync();
             return mapper.Map<IEnumerable<ContractDto>>(contracts);
         }
 
@@ -122,7 +122,14 @@ namespace Eagency.BLL.Services
                 throw new DbNullException();
             }
 
+            var property = await db.Properties.Where(c => c.Id == entity.PropertyId).FirstOrDefaultAsync();
+            if (property == null)
+            {
+                throw new DbNullException();
+            }
+
             entity.IsSigned = true;
+            property.Sold = true;
 
             await db.SaveChangesAsync();
             return mapper.Map<ContractDto>(entity);

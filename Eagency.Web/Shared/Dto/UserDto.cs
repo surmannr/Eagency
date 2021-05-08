@@ -20,7 +20,11 @@ namespace Eagency.Web.Shared.Dto
         [Required]
         [StringLength(100)]
         public string LastName { get; set; }
+        public string Role { get; set; }
 
-        
+        public UserDto()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace Eagency.BLL.Services.Interfaces
     {
         Task<PropertyDto> GetByIdAsync(int id);
         Task<IEnumerable<PropertyDto>> GetAllAsync();
+        Task<PagedResult<PropertyDto>> GetAllAvailablePagedAsync(int pagesize, int pagenumber);
         Task<PagedResult<PropertyDto>> GetAllPagedAsync(int pagesize, int pagenumber);
         Task<PropertyDto> CreateAsync(PropertyDto create);
         Task DeleteAsync(int id);

@@ -1,5 +1,101 @@
-﻿<h3>ManageUsers</h3>
+﻿@page "/manage-users"
+@layout AdminLayout
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Properties</MudText>
+
+<MudTable Items="@UsersList" Hover="true" Filter="new Func<UserDto,bool>(FilterFunc)" @bind-SelectedItem="SelectedUser" SortLabel="Sort By">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Users</MudText>
+        <MudToolBarSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object>(x=>x.FirstName)">Firstname</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object>(x=>x.LastName)">Lastname</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object>(x=>x.Email)">Email</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object>(x=>x.Role)">Role</MudTableSortLabel></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Username">@context.UserName</MudTd>
+        <MudTd DataLabel="Firstname">@context.FirstName</MudTd>
+        <MudTd DataLabel="Lastname">@context.LastName</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Role">@context.Role</MudTd>
+        <MudTd DataLabel="Ikonok">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="() => Remove(context)" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
+    List<UserDto> UsersList { get; set; } = new List<UserDto>();
 
+    UserDto SelectedUser { get; set; } = new UserDto();
+
+    string searchString { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        UsersList = await http.GetFromJsonAsync<List<UserDto>>($"api/User");
+    }
+
+
+    public async Task Remove(UserDto user)
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Delete",
+            $"Are you sure you want to delete #{user.Id} user?",
+            yesText: "Yes", cancelText: "Cancel");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.DeleteAsync($"api/User/{user.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfull operation - delete.", Severity.Success);
+                UsersList.Remove(user);
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add("Error: you can't delete this item!", Severity.Error);
+            }
+        }
+    }
+
+    private bool FilterFunc(UserDto element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Email.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 }

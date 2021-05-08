@@ -65,6 +65,20 @@ namespace Eagency.Web.Server.Controllers
         }
 
         [SwaggerOperation(
+               Summary = "Elérhető ingatlanok lekérdezése oldalazva.",
+               Description = "Ha nem érvényes az oldalszám és az oldalméret akkor hibát dob, egyébként visszaadja az oldalazott listát."
+       )]
+        [Route("available/page")]
+        [HttpGet]
+        [SwaggerResponse(StatusCodes.Status200OK, "Az ingatlanok sikeresen lekérdezve.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Az oldalszám vagy az oldalméret értéke nem érvényes.")]
+        public async Task<ActionResult<PagedResult<PropertyDto>>> GetAllAvailablePaged([FromQuery] int pagesize, [FromQuery] int pagenumber)
+        {
+            var properties = await propertyService.GetAllAvailablePagedAsync(pagesize, pagenumber);
+            return Ok(properties);
+        }
+
+        [SwaggerOperation(
                 Summary = "Ingatlan létrehozása.",
                 Description = "A létrehozás előtt ellenőrzi a paramétereket, hogy megfelelnek e a követelményeknek. Ha igen akkor létrehozza az új entitást."
         )]

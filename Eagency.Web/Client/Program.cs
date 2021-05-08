@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using MudBlazor.Services;
+using System.Security.Claims;
 
 namespace Eagency.Web.Client
 {
@@ -25,7 +26,14 @@ namespace Eagency.Web.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Eagency.Web.ServerAPI"));
 
+            builder.Services.AddHttpClient("Eagency.PublicServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
             builder.Services.AddMudServices();
+
+            builder.Services.AddAuthorizationCore(options =>
+            {
+                options.AddPolicy("AgentPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Agent"));
+            });
 
             builder.Services.AddApiAuthorization();
 

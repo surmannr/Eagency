@@ -14,7 +14,11 @@ namespace Eagency.BLL.Config.Mapper
         public MapProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<Contract, ContractDto>().ReverseMap();
+
+            CreateMap<Contract, ContractDto>()
+                .ForMember(e => e.AgentName, a => a.MapFrom(s => s.Property.User.FirstName + " " + s.Property.User.LastName))
+                .ForMember(e => e.ClientName, a => a.MapFrom(s => s.User.FirstName + " " + s.User.LastName))
+                .ReverseMap();
             CreateMap<Comment, CommentDto>().ReverseMap();
 
             CreateMap<Property, PropertyDto>()
