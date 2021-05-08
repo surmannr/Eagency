@@ -19,7 +19,10 @@ namespace Eagency.BLL.Config.Mapper
                 .ForMember(e => e.AgentName, a => a.MapFrom(s => s.Property.User.FirstName + " " + s.Property.User.LastName))
                 .ForMember(e => e.ClientName, a => a.MapFrom(s => s.User.FirstName + " " + s.User.LastName))
                 .ReverseMap();
-            CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Comment, CommentDto>()
+                .ForMember(e => e.UserName, a => a.MapFrom(s => s.User.UserName))
+                .ReverseMap()
+                .ForPath(e => e.User.UserName, e => e.Ignore());
 
             CreateMap<Property, PropertyDto>()
                 .ForMember(e => e.Street, a => a.MapFrom(s => s.Address.Street))

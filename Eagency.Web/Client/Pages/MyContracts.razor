@@ -92,15 +92,6 @@
 
     </div>
 }
-@foreach (var claim in ClaimsPrincipal.Claims)
-{
-    <p>
-        @claim.Type :
-    </p>
-    <p>
-        @claim.Value
-    </p>
-}
 @code {
 
     PagedResult<ContractDto> ContractList { get; set; } = new PagedResult<ContractDto>();
@@ -110,16 +101,12 @@
     public string UserId { get; set; } = "";
     public string Name { get; set; } = "";
 
-    public System.Security.Claims.ClaimsPrincipal ClaimsPrincipal { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
 
         var auth = await AuthState.GetAuthenticationStateAsync();
         var claimsPrincipal = auth.User;
-
-        ClaimsPrincipal = auth.User;
 
         UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
         var nameclaim = claimsPrincipal.Claims.Where(x => x.Type == "AllName").Select(c => c.Value).SingleOrDefault();

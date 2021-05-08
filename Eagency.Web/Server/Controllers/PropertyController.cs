@@ -1,14 +1,18 @@
-﻿using Eagency.BLL.Services.Interfaces;
-using Eagency.Web.Shared.Contants;
+﻿
+
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Eagency.BLL.Services.Interfaces;
 using Eagency.Web.Shared.Dto;
-using Eagency.Web.Shared.Extensions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace Eagency.Web.Server.Controllers
@@ -18,10 +22,17 @@ namespace Eagency.Web.Server.Controllers
     public class PropertyController : ControllerBase
     {
         private readonly IPropertyService propertyService;
+        private readonly string _azureConnectionString;
 
         public PropertyController(IPropertyService propertyService)
         {
             this.propertyService = propertyService;
+
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddAzureKeyVault(new Uri(@"https://festivall-keyvault.vault.azure.net/"), new DefaultAzureCredential());
+
+            IConfiguration configuration = builder.Build();
+            _azureConnectionString = configuration["AzureBlobStorageConnectionString"];
         }
 
         [SwaggerOperation(
@@ -89,6 +100,35 @@ namespace Eagency.Web.Server.Controllers
         {
             var property = await propertyService.CreateAsync(propertyDto);
             return Ok(property);
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload()
+        {
+            try
+            {
+                var formCollection = await Request.ReadFormAsync();
+                var file = formCollection.Files.First();
+                if (file.Length > 0)
+                {
+                    var container = new BlobContainerClient(_azureConnectionString, "eagency-images");
+                    var createResponse = await container.CreateIfNotExistsAsync();
+                    if (createResponse != null && createResponse.GetRawResponse().Status == 201)
+                        await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+                    var blob = container.GetBlobClient(file.FileName);
+                    await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+                    using (var fileStream = file.OpenReadStream())
+                    {
+                        await blob.UploadAsync(fileStream, new BlobHttpHeaders { ContentType = file.ContentType });
+                    }
+                    return Ok(blob.Uri.ToString());
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
 
         [SwaggerOperation(

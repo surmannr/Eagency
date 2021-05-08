@@ -32,7 +32,7 @@ namespace Eagency.BLL.Services
                 throw new InvalidQueryParamsException();
             }
 
-            var comments = await db.Comments.Where(c => c.PropertyId == propertyid).OrderBy(c => c.Date)
+            var comments = await db.Comments.Where(c => c.PropertyId == propertyid).Include(e => e.User).OrderBy(c => c.Date)
                                             .Paging(pagesize, pagenumber).ToListAsync();
             var count = await db.Comments.CountAsync();
 
@@ -50,7 +50,8 @@ namespace Eagency.BLL.Services
         {
             if (CheckEntity(create))
             {
-                var result = db.Comments.Add(mapper.Map<Comment>(create));
+                var map = mapper.Map<Comment>(create);
+                var result = db.Comments.Add(map);
                 await db.SaveChangesAsync();
                 return mapper.Map<CommentDto>(result.Entity);
             }

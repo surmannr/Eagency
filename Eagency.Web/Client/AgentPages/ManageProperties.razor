@@ -64,6 +64,7 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="ToCreate">Create new apartment</MudButton>
 
 @code {
     List<PropertyDto> PropertiesList { get; set; } = new List<PropertyDto>();
@@ -159,5 +160,10 @@
         if (element.IsFurnished.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
+    }
+
+    public void ToCreate()
+    {
+        uriHelper.NavigateTo("/create-property");
     }
 }

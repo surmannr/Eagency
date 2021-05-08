@@ -1,0 +1,249 @@
+﻿@page "/profile"
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Encodings
+@using System.Text
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+@inject AuthenticationStateProvider AuthState
+
+<MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Profile settings</MudText>
+
+<AuthorizeView>
+    <Authorized>
+
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-6">
+                <MudTextField T="string" Label="Username" Required="true" RequiredError="User name is required!" @bind-Value="EditUser.UserName" />
+            </div>
+            <div class="col-md-1">
+                <MudIconButton Icon="fas fa-edit" Color="Color.Error" OnClick="ModifyUsername"></MudIconButton>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-6">
+                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" @bind-Value="EditUser.Email" />
+            </div>
+            <div class="col-md-1">
+                <MudIconButton Icon="fas fa-edit" Color="Color.Error" OnClick="ModifyEmail"></MudIconButton>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-6">
+                <MudTextField T="string" Label="Firstname" Required="true" RequiredError="Firstname is required!" @bind-Value="EditUser.FirstName" />
+            </div>
+            <div class="col-md-1">
+                <MudIconButton Icon="fas fa-edit" Color="Color.Error" OnClick="ModifyFirstname"></MudIconButton>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-6">
+                <MudTextField T="string" Label="Lastname" Required="true" RequiredError="Lastname is required!" @bind-Value="EditUser.LastName" />
+            </div>
+            <div class="col-md-1">
+                <MudIconButton Icon="fas fa-edit" Color="Color.Error" OnClick="ModifyLastname"></MudIconButton>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-6">
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                              InputType="InputType.Password"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              RequiredError="Password is required!" @bind-Value="EditUser.Password" />
+                <MudTextField T="string"
+                              Label="Password again" HelperText="Repeat the password" InputType="InputType.Password"
+                              Validation="@(new Func<string, string>(PasswordMatch))" />
+                <MudTextField T="string"
+                              Label="Current password" HelperText="Your current password" InputType="InputType.Password" @bind-Value="_CurrentPassword" />
+            </div>
+            <div class="col-md-1">
+                <MudIconButton Icon="fas fa-edit" Color="Color.Error" OnClick="ModifyPassword"></MudIconButton>
+            </div>
+
+        </div>
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+    UserDto EditUser { get; set; } = new UserDto();
+    public string _CurrentPassword { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+
+        var auth = await AuthState.GetAuthenticationStateAsync();
+        var claimsPrincipal = auth.User;
+        var UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
+        EditUser = await http.GetFromJsonAsync<UserDto>($"api/User/{UserId}");
+
+    }
+
+    public async Task ModifyUsername()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to edit username?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PatchAsync($"api/User/{EditUser.Id}/username?username={EditUser.UserName}", null);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully edited.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: edit failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task ModifyEmail()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to edit email?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PatchAsync($"api/User/{EditUser.Id}/email?email={EditUser.Email}", null);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully edited.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: edit failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task ModifyFirstname()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to edit firstname?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PatchAsync($"api/User/{EditUser.Id}/name?firstname={EditUser.FirstName}", null);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully edited.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: edit failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task ModifyLastname()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to edit lastname?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PatchAsync($"api/User/{EditUser.Id}/name?lastname={EditUser.LastName}", null);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully edited.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: edit failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task ModifyPassword()
+    {
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to edit password?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            if(EditUser.Password != pwField1.Value)
+            {
+                Snackbar.Add("Error: Passwords don't match", Severity.Error);
+                return;
+            }
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            PasswordChangeDto pws = new PasswordChangeDto()
+            {
+                NewPassword = EditUser.Password,
+                CurrentPassword = _CurrentPassword
+            };
+            var jsonRequest = System.Text.Json.JsonSerializer.Serialize(pws);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-patch+json");
+            var result = await http.PatchAsync($"api/User/{EditUser.Id}/password", content);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully edited.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error: edit failed. Maybe your current password doesn't match or the new password is not valid.", Severity.Error);
+            }
+        }
+
+    }
+
+    MudTextField<string> pwField1;
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "Passwords don't match";
+        return null;
+    }
+}

@@ -1,0 +1,268 @@
+﻿@page "/property/{id:int}"
+@inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
+@inject AuthenticationStateProvider AuthState
+@using Eagency.Web.Shared.Enums
+@using Eagency.Web.Shared.Extensions
+@using System.Security.Claims
+
+@if (Property != null)
+{
+    <div class="row">
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <img class="img-fluid rounded" src="@Property.ImageName" />
+        </div>
+        <div class="col-md-10 d-flex flex-column justify-content-between">
+            <MudText Typo="Typo.h1">@Property.City, @Property.Country</MudText>
+            <MudText Typo="Typo.h4">@Property.Street, @Property.ZipCode.ToString()</MudText>
+            <MudText Typo="Typo.h5">@Property.Area km<sup>2</sup> -  @Property.Price.ToString("N0") $</MudText>
+            <MudText Typo="Typo.body2">@Property.Description</MudText>
+        </div>
+    </div>
+    <div class="row">
+        <MudTreeView T="string">
+            <MudTreeViewItem Value='"Details"'>
+                <MudTreeViewItem Value="@("Number of bedrooms: " + Property.NumberOfBedrooms.ToString())" />
+                <MudTreeViewItem Value="@("Number of bathroom: " + Property.NumberOfBathrooms.ToString())" />
+                <MudTreeViewItem Value="@("Number of garages: " + Property.NumberOfGarages.ToString())" />
+                <MudTreeViewItem Value="@("Number of parking spaces: " + Property.NumberOfParkingSpaces.ToString())" />
+                @if (Property.IsFurnished)
+                {
+                    <MudTreeViewItem Value="@("Furnished: " + "yes")" />
+                }
+                else
+                {
+                    <MudTreeViewItem Value="@("Furnished: " + "no")" />
+                }
+                <MudTreeViewItem Value="@("House type: " + HouseType)" />
+            </MudTreeViewItem>
+        </MudTreeView>
+    </div>
+    <div class="row mb-5">
+        <div class="col-md-9">
+            <MudTextField T="string" Label="Question" Variant="Variant.Outlined" Lines="3" @bind-Value="Question" />
+        </div>
+        <div class="col-md-3">
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Style="height:100%" FullWidth="true" Color="Color.Primary" OnClick="AskQuestion">Send</MudButton>
+        </div>
+    </div>
+
+    @if (Comments != null && Comments.Results != null && Comments.Results.Count() != 0)
+    {
+        @foreach (var comment in Comments.Results)
+        {
+            <div class="row mb-4 border-dark">
+                <div class="col-md-3 d-flex flex-column justify-content-center align-items-center">
+                    <MudText Typo="Typo.body1">@comment.UserName</MudText>
+                    <MudText Typo="Typo.body2">@comment.Date.ToString("yyyy.MM.dd.")</MudText>
+                </div>
+                <div class="col-md-8 d-flex flex-column justify-content-around">
+                    <MudText Typo="Typo.body1">Question: @comment.Question</MudText>
+                    @if (!string.IsNullOrEmpty(comment.Answer))
+                    {
+                        <MudText Class="mt-5" Typo="Typo.body1">Answer: @comment.Answer</MudText> }
+                    else
+                    {
+                        <AuthorizeView Policy="AgentPolicy">
+                            <Authorized>
+                                <div class="d-flex">
+                                    <MudTextField T="string" Label="Answer" @bind-Value="Answer" Required="true" />
+                                    <MudIconButton Icon="fas fa-comment" Color="Color.Dark" OnClick="c => AnswerComment(comment)"></MudIconButton>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <div class="d-flex">
+                                    <MudText Class="mt-5" Typo="Typo.body1" Color="Color.Error"><i>The agent hasn't answer the question yet.</i></MudText>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    
+                      
+                    }
+                </div>
+                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                    <AuthorizeView Policy="AgentPolicy">
+                        <Authorized>
+                                <MudIconButton Icon="fas fa-trash-alt" Color="Color.Error" OnClick="c => DeleteQuestion(comment)"></MudIconButton>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+            <hr />
+        }
+
+        <div class="d-flex justify-content-around">
+            @if (PageNumber == 1)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" Color="Color.Secondary" Disabled="true"></MudIconButton>
+            }
+            else
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" Color="Color.Secondary" OnClick="c => PageLeft()"></MudIconButton>
+            }
+            @if (Comments.Results.Count() < PageSize)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" Color="Color.Secondary" Disabled="true"></MudIconButton>
+            }
+            else
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" Color="Color.Secondary" OnClick="c => PageRight()"></MudIconButton>
+            }
+
+        </div>
+    }
+
+}
+
+@code {
+    public string ImageURL = @"https://festivall.blob.core.windows.net/eagency-images/";
+
+    PropertyDto Property { get; set; } = new PropertyDto();
+
+    public string HouseType { get; set; } = "";
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public string Question { get; set; } = "";
+    public string Answer { get; set; } = "";
+    public string UserId { get; set; } = "";
+
+    public PagedResult<CommentDto> Comments { get; set; } = new PagedResult<CommentDto>();
+    public int PageSize { get; set; } = 12;
+    public int PageNumber { get; set; } = 1;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        Property = await http.GetFromJsonAsync<PropertyDto>($"api/Property/{Id}");
+        Property.ImageName = ImageURL + Property.ImageName;
+
+        try
+        {
+            HouseType = Property.HouseType.GetDisplayName();
+        }
+        catch (Exception)
+        {
+            HouseType = "House";
+        }
+
+        Comments = await http.GetFromJsonAsync<PagedResult<CommentDto>>($"api/Comment/property/{Id}?pagesize={PageSize}&pagenumber={PageNumber}");
+
+        var auth = await AuthState.GetAuthenticationStateAsync();
+        var claimsPrincipal = auth.User;
+        UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
+    }
+
+    public async Task AnswerComment(CommentDto comment)
+    {
+        if (string.IsNullOrEmpty(Answer))
+        {
+            Snackbar.Add("Error: you didn't answer the question, it's empty.", Severity.Error);
+            return;
+        }
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to answer it?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.PatchAsync($"api/Comment/{comment.Id}/add-answer?answer={Answer}", null);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully answered the question.", Severity.Success);
+                comment.Answer = Answer;
+            }
+            else
+            {
+                Snackbar.Add("Error: answer failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task AskQuestion()
+    {
+        if (string.IsNullOrEmpty(Question))
+        {
+            Snackbar.Add("Error: question is empty.", Severity.Error);
+            return;
+        }
+        bool? dialogresult = await DialogService.ShowMessageBox(
+           "Warning",
+           "Do you want to continue?",
+           yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+
+            var auth = await AuthState.GetAuthenticationStateAsync();
+            var claimsPrincipal = auth.User;
+            var userid = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
+            var username = claimsPrincipal.FindFirst(x => x.Type.Equals(ClaimTypes.Name)).Value;
+            CommentDto newComment = new CommentDto()
+            {
+                Date = DateTimeOffset.Now,
+                PropertyId = Id,
+                Question = Question,
+                UserId = userid,
+                Answer = null
+            };
+            var result = await http.PostAsJsonAsync<CommentDto>($"api/Comment", newComment);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully answered the question.", Severity.Success);
+                Comments = await http.GetFromJsonAsync<PagedResult<CommentDto>>($"api/Comment/property/{Id}?pagesize={PageSize}&pagenumber={PageNumber}");
+            }
+            else
+            {
+                Snackbar.Add("Error: answer failed.", Severity.Error);
+            }
+        }
+    }
+
+    public async Task DeleteQuestion(CommentDto comment)
+    {
+
+        bool? dialogresult = await DialogService.ShowMessageBox(
+            "Warning",
+            "Are you sure you want to delete it?",
+            yesText: "Yes", cancelText: "No");
+        if (dialogresult != null)
+        {
+            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var result = await http.DeleteAsync($"api/Comment/{comment.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Successfully answered the question.", Severity.Success);
+                Comments = await http.GetFromJsonAsync<PagedResult<CommentDto>>($"api/Comment/property/{Id}?pagesize={PageSize}&pagenumber={PageNumber}");
+            }
+            else
+            {
+                Snackbar.Add("Error: answer failed.", Severity.Error);
+            }
+        }
+
+    }
+
+    public async Task PageLeft()
+    {
+        PageNumber--;
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        Comments = new PagedResult<CommentDto>();
+        Comments = await http.GetFromJsonAsync<PagedResult<CommentDto>>($"api/Comment/property/{Id}?pagesize={PageSize}&pagenumber={PageNumber}");
+    }
+
+    public async Task PageRight()
+    {
+        PageNumber++;
+        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        Comments = new PagedResult<CommentDto>();
+        Comments = await http.GetFromJsonAsync<PagedResult<CommentDto>>($"api/Comment/property/{Id}?pagesize={PageSize}&pagenumber={PageNumber}");
+    }
+
+}

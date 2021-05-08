@@ -20,5 +20,6 @@ namespace Eagency.Web.Shared.Dto
         public int PropertyId { get; set; }
 
         public string UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

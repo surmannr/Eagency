@@ -43,13 +43,15 @@
 
     PagedResult<PropertyDto> Properties { get; set; } = new PagedResult<PropertyDto>();
 
+    public string ImageURL = @"https://festivall.blob.core.windows.net/eagency-images/";
+
     protected override async Task OnInitializedAsync()
     {
         var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
         Properties = await http.GetFromJsonAsync<PagedResult<PropertyDto>>("api/Property/page?pagesize=4&pagenumber=1");
         foreach(var prop in Properties.Results)
         {
-            prop.ImageName = "images/" + prop.ImageName;
+            prop.ImageName = ImageURL + prop.ImageName;
         }
     }
 }

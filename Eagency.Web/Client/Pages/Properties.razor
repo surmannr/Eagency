@@ -1,5 +1,8 @@
 ﻿@page "/properties"
 @inject IHttpClientFactory HttpClientFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager uriHelper
 
 <MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">Properties</MudText>
 
@@ -17,6 +20,7 @@
                         <MudText Typo="Typo.h5">@property.City, @property.Country</MudText>
                         <MudText Typo="Typo.body2">@property.Area km<sup>2</sup></MudText>
                         <MudText Typo="Typo.body2">@property.HouseType.GetDisplayName()</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="c => GoToPage(property.Id)">Go to page</MudButton>
                     </MudCardContent>
                 </MudCard>
             </div>
@@ -51,13 +55,15 @@
     public int PageSize { get; set; } = 12;
     public int PageNumber { get; set; } = 1;
 
+    public string ImageURL = @"https://festivall.blob.core.windows.net/eagency-images/";
+
     protected override async Task OnInitializedAsync()
     {
         var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
         PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber=1");
         foreach (var prop in PropertiesList.Results)
         {
-            prop.ImageName = "images/" + prop.ImageName;
+            prop.ImageName = ImageURL + prop.ImageName;
         }
     }
 
@@ -69,7 +75,7 @@
         PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber={PageNumber}");
         foreach (var prop in PropertiesList.Results)
         {
-            prop.ImageName = "images/" + prop.ImageName;
+            prop.ImageName = ImageURL + prop.ImageName;
         }
     }
 
@@ -81,7 +87,12 @@
         PropertiesList = await http.GetFromJsonAsync<PagedResult<PropertyDto>>($"api/Property/available/page?pagesize={PageSize}&pagenumber={PageNumber}");
         foreach (var prop in PropertiesList.Results)
         {
-            prop.ImageName = "images/" + prop.ImageName;
+            prop.ImageName = ImageURL + prop.ImageName;
         }
+    }
+
+    public void GoToPage(int id)
+    {
+        uriHelper.NavigateTo($"/property/{id}");
     }
 }
