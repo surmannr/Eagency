@@ -4,11 +4,12 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
+<div class="row p-5 mt-2" style="background-color: #00203FFF; color: #ADEFD1FF; border-radius: 16px 16px">
+   
     @{
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <h1>@ViewData["Title"]</h1>
+            <button type="submit" class="nav-link btn btn-link" style="color:#ADEFD1FF">Click here to Logout</button>
+        </form>
     }
-</header>
+</div>
