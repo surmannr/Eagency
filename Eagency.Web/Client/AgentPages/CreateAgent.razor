@@ -61,7 +61,7 @@
 
     public async Task Register()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
         var result = await http.PostAsJsonAsync($"api/User/admin", newUser);
         if (result.IsSuccessStatusCode)
         {

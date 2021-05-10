@@ -75,7 +75,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
         PropertiesList = await http.GetFromJsonAsync<List<PropertyDto>>($"api/Property");
     }
 
@@ -87,7 +87,7 @@
             yesText: "Yes", cancelText: "Cancel");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PutAsJsonAsync($"api/Property/{SelectedProperty.Id}", SelectedProperty);
             if (result.IsSuccessStatusCode)
             {
@@ -108,7 +108,7 @@
         }
         else
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var ev = PropertiesList.Where(x => x.Id == SelectedProperty.Id).FirstOrDefault();
             if (ev != null) ev = await http.GetFromJsonAsync<PropertyDto>($"api/Property/{SelectedProperty.Id}");
             else
@@ -130,7 +130,7 @@
             yesText: "Yes", cancelText: "Cancel");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.DeleteAsync($"api/Property/{property.Id}");
             if (result.IsSuccessStatusCode)
             {

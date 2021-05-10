@@ -64,7 +64,7 @@
 
     public async Task CreateNewContract()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
 
         newContract.Date = DateTimeOffset.Now;
         newContract.IsPaid = false;

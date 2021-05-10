@@ -4,6 +4,7 @@
 @inject IDialogService DialogService
 @using System.Text.Json
 @using System.Text
+@inject NavigationManager uriHelper
 @inject ISnackbar Snackbar
 
 <MudText Typo="Typo.h2" Align="Align.Center" Style="margin-bottom:30px">My contracts</MudText>
@@ -108,7 +109,16 @@
         var auth = await AuthState.GetAuthenticationStateAsync();
         var claimsPrincipal = auth.User;
 
-        UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
+        var userclaim = claimsPrincipal.FindFirst(x => x.Type.Equals("sub"));
+        if (userclaim != null)
+        {
+            UserId = userclaim.Value;
+        }
+        else
+        {
+            uriHelper.NavigateTo("/login", true);
+        }
+
         var nameclaim = claimsPrincipal.Claims.Where(x => x.Type == "AllName").Select(c => c.Value).SingleOrDefault();
         if (nameclaim != null)
         {
@@ -132,7 +142,8 @@
             {
                 contract.IsPaid = true;
                 Snackbar.Add("Successful payment.", Severity.Success);
-            } else
+            }
+            else
             {
                 Snackbar.Add("Error: payment failed.", Severity.Error);
             }
@@ -155,7 +166,8 @@
             {
                 contract.IsSigned = true;
                 Snackbar.Add("Successful signature.", Severity.Success);
-            } else
+            }
+            else
             {
                 Snackbar.Add("Error: signature failed.", Severity.Error);
             }

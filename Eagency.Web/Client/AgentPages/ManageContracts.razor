@@ -65,7 +65,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
         ContractsList = await http.GetFromJsonAsync<List<ContractDto>>($"api/Contract");
     }
 
@@ -78,7 +78,7 @@
             yesText: "Yes", cancelText: "Cancel");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.DeleteAsync($"api/Contract/{contract.Id}");
             if (result.IsSuccessStatusCode)
             {

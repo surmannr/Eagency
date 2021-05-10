@@ -98,14 +98,7 @@ namespace Eagency.Web.Server
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddCors(policy =>
-            {
-                policy.AddPolicy("CorsPolicy", opt => opt
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-            });
-
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -150,7 +143,7 @@ namespace Eagency.Web.Server
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AgentPolicy", policy => policy.RequireRole(ClaimTypes.Role, "Agent"));
+                options.AddPolicy("AgentPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Agent"));
             });
         }
 

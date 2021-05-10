@@ -1,5 +1,6 @@
 ﻿using Eagency.BLL.Services.Interfaces;
 using Eagency.Web.Shared.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -21,6 +22,7 @@ namespace Eagency.Web.Server.Controllers
             this.userService = userService;
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                Summary = "Az összes felhasználó lekérdezése.",
                Description = "Az összes felhasználó lekérdezése, ami visszaad egy listát oldalazás nélkül."
@@ -75,6 +77,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(user);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                Summary = "Admin létrehozása.",
                Description = "A kapott entitás paramétereit ellenőrzi és ha nem felel meg a követelményeknek akkor hibát dob, egyébként létrehozza az új entitást."
@@ -89,6 +92,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(user);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                Summary = "Felhasználó törlése.",
                Description = "Törlés előtt ellenőrzi, hogy a kapott id-val rendelkezik-e entitás. Ha igen, akkor elvégzi a törlést, egyébként hibát dob."
@@ -103,6 +107,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok();
         }
 
+        [Authorize]
         [SwaggerOperation(
                Summary = "Felhasználó email módosítása.",
                Description = "Módosítás előtt ellenőrzi, hogy a kapott id-val rendelkezik-e entitás. Ha igen, akkor elvégzi a módosítást, egyébként hibát dob."
@@ -117,6 +122,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [SwaggerOperation(
               Summary = "Felhasználó username módosítása.",
               Description = "Módosítás előtt ellenőrzi, hogy a kapott id-val rendelkezik-e entitás. Ha igen, akkor elvégzi a módosítást, egyébként hibát dob."
@@ -131,6 +137,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [SwaggerOperation(
               Summary = "Felhasználó teljes nevének módosítása.",
               Description = "Módosítás előtt ellenőrzi, hogy a kapott id-val rendelkezik-e entitás. Ha igen, akkor elvégzi a módosítást, egyébként hibát dob."
@@ -145,6 +152,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [SwaggerOperation(
               Summary = "Felhasználó jelszavának módosítása.",
               Description = "Módosítás előtt ellenőrzi, hogy a kapott id-val rendelkezik-e entitás. Ha igen, akkor megnézi, hogy a két jelszóparaméter üres vagy null. Amennyiben nem üres, akkor módosít, egyébként hibát dob."

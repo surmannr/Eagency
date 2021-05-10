@@ -1,6 +1,7 @@
 ﻿using Eagency.BLL.Services.Interfaces;
 using Eagency.Web.Shared.Dto;
 using Eagency.Web.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -35,6 +36,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(comments);
         }
 
+        [Authorize]
         [SwaggerOperation(
                 Summary = "Komment létrehozása.",
                 Description = "Komment létrehozása. Létrehozás előtt validáláson megy keresztül és ha valamelyik paraméter nem felel meg hibát dob."
@@ -48,6 +50,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(comment);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Komment törlése.",
                 Description = "Komment törlése. Törlés előtt megnézi, hogy létezik-e a kapott id alapján elem az adatbázisban."
@@ -62,6 +65,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok();
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Komment válaszának megváltoztatása.",
                 Description = "Komment válaszának megváltoztatása. Ellenőrzi, hogy a kapott string null vagy üres."

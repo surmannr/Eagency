@@ -111,7 +111,7 @@
 
     public async Task CreateNewProperty()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
         newProperty.Sold = false;
 
         var auth = await AuthState.GetAuthenticationStateAsync();

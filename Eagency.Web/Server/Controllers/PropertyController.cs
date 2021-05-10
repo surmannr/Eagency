@@ -5,6 +5,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Eagency.BLL.Services.Interfaces;
 using Eagency.Web.Shared.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -89,6 +90,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(properties);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Ingatlan létrehozása.",
                 Description = "A létrehozás előtt ellenőrzi a paramétereket, hogy megfelelnek e a követelményeknek. Ha igen akkor létrehozza az új entitást."
@@ -131,6 +133,7 @@ namespace Eagency.Web.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Ingatlan törlése.",
                 Description = "Törlés előtt ellenőrzi, hogy létezik-e a kapott id-val elem az adatbázisban. Ha igen, akkor kitörli, egyébként hibát dob."
@@ -145,6 +148,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok();
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                Summary = "Ingatlan módosítása.",
                Description = "Módosítás előtt ellenőrzi, hogy érvényesek-e a kapott entitás paraméterei. Ha érvényes, akkor ellenőrzi, hogy ilyen id-val rendelkezik-e elem az adatbázisban" +

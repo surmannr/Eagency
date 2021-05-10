@@ -74,7 +74,7 @@
                             </Authorized>
                             <NotAuthorized>
                                 <div class="d-flex">
-                                    <MudText Class="mt-5" Typo="Typo.body1" Color="Color.Error"><i>The agent hasn't answer the question yet.</i></MudText>
+                                    <MudText Class="mt-5" Typo="Typo.body1" Color="Color.Error"><i>The agent hasn't answered the question yet.</i></MudText>
                                 </div>
                             </NotAuthorized>
                         </AuthorizeView>
@@ -154,7 +154,11 @@
 
         var auth = await AuthState.GetAuthenticationStateAsync();
         var claimsPrincipal = auth.User;
-        UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
+        var userclaim = claimsPrincipal.FindFirst(x => x.Type.Equals("sub"));
+        if(userclaim != null)
+        {
+            UserId = userclaim.Value;
+        }
     }
 
     public async Task AnswerComment(CommentDto comment)
@@ -170,12 +174,13 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PatchAsync($"api/Comment/{comment.Id}/add-answer?answer={Answer}", null);
             if (result.IsSuccessStatusCode)
             {
                 Snackbar.Add("Successfully answered the question.", Severity.Success);
                 comment.Answer = Answer;
+                Answer = "";
             }
             else
             {
@@ -192,13 +197,18 @@
             Snackbar.Add("Error: question is empty.", Severity.Error);
             return;
         }
+        if (string.IsNullOrEmpty(UserId))
+        {
+            Snackbar.Add("Error: please login to ask a question.", Severity.Error);
+            return;
+        }
         bool? dialogresult = await DialogService.ShowMessageBox(
-           "Warning",
-           "Do you want to continue?",
-           yesText: "Yes", cancelText: "No");
+       "Warning",
+       "Do you want to continue?",
+       yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
 
             var auth = await AuthState.GetAuthenticationStateAsync();
             var claimsPrincipal = auth.User;
@@ -234,7 +244,7 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.DeleteAsync($"api/Comment/{comment.Id}");
             if (result.IsSuccessStatusCode)
             {

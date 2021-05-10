@@ -91,12 +91,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+        var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
 
         var auth = await AuthState.GetAuthenticationStateAsync();
         var claimsPrincipal = auth.User;
-        var UserId = claimsPrincipal.FindFirst(x => x.Type.Equals("sub")).Value;
-        EditUser = await http.GetFromJsonAsync<UserDto>($"api/User/{UserId}");
+        var userclaim = claimsPrincipal.FindFirst(x => x.Type.Equals("sub"));
+        if(userclaim != null)
+        {
+            var UserId = userclaim.Value;
+            EditUser = await http.GetFromJsonAsync<UserDto>($"api/User/{UserId}");
+        } else
+        {
+            uriHelper.NavigateTo("/login", true);
+        }
+
 
     }
 
@@ -108,7 +116,7 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PatchAsync($"api/User/{EditUser.Id}/username?username={EditUser.UserName}", null);
             if (result.IsSuccessStatusCode)
             {
@@ -130,7 +138,7 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PatchAsync($"api/User/{EditUser.Id}/email?email={EditUser.Email}", null);
             if (result.IsSuccessStatusCode)
             {
@@ -152,7 +160,7 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PatchAsync($"api/User/{EditUser.Id}/name?firstname={EditUser.FirstName}", null);
             if (result.IsSuccessStatusCode)
             {
@@ -174,7 +182,7 @@
             yesText: "Yes", cancelText: "No");
         if (dialogresult != null)
         {
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             var result = await http.PatchAsync($"api/User/{EditUser.Id}/name?lastname={EditUser.LastName}", null);
             if (result.IsSuccessStatusCode)
             {
@@ -201,7 +209,7 @@
                 Snackbar.Add("Error: Passwords don't match", Severity.Error);
                 return;
             }
-            var http = HttpClientFactory.CreateClient("Eagency.PublicServerAPI");
+            var http = HttpClientFactory.CreateClient("Eagency.Web.ServerAPI");
             PasswordChangeDto pws = new PasswordChangeDto()
             {
                 NewPassword = EditUser.Password,

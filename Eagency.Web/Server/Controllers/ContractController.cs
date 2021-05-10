@@ -1,6 +1,7 @@
 ﻿using Eagency.BLL.Services.Interfaces;
 using Eagency.Web.Shared.Dto;
 using Eagency.Web.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace Eagency.Web.Server.Controllers
             this.contractService = contractService;
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Az összes szerződés lekérdezése.",
                 Description = "Az összes szerződés lekérése az adatbázisból."
@@ -35,6 +37,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(contracts);
         }
 
+        [Authorize]
         [SwaggerOperation(
                 Summary = "Az összes szerződés lekérdezése oldalazva felhasználó id alapján.",
                 Description = "A lekérdezés előtt ellenőrzi, hogy az oldalak értékei érvényesek és a felhasználó id-val létezik-e felhasználó." +
@@ -51,6 +54,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(contracts);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Szerződés létrehozása.",
                 Description = "Létrehozás előtt a kapott modell paramétereit ellenőrzi, majd ha minden rendben, akkor létrehozza."
@@ -64,6 +68,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(contract);
         }
 
+        [Authorize(Policy = "AgentPolicy")]
         [SwaggerOperation(
                 Summary = "Szerződés törlése.",
                 Description = "Törlés előtt ellenőrzi, hogy létezik-e a kapott id-val elem az adatbázisban. Ha igen, akkor kitörli, egyébként hibát dob."
@@ -78,6 +83,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok();
         }
 
+        [Authorize]
         [SwaggerOperation(
                 Summary = "Szerződés kifizetett státusz megváltoztatása.",
                 Description = "A módosítás előtt ellenőrzi, hogy létezik-e a kapott id-val elem az adatbázisban. Ha igen, akkor megváltoztatja az ispaid értékét."
@@ -92,6 +98,7 @@ namespace Eagency.Web.Server.Controllers
             return Ok(contract);
         }
 
+        [Authorize]
         [SwaggerOperation(
                 Summary = "Szerződés aláírt státusz megváltoztatása.",
                 Description = "A módosítás előtt ellenőrzi, hogy létezik-e a kapott id-val elem az adatbázisban. Ha igen, akkor megváltoztatja az issigned értékét."
