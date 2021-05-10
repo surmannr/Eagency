@@ -1,4 +1,5 @@
-﻿using Eagency.BLL.Config.Mapper;
+﻿using Azure.Identity;
+using Eagency.BLL.Config.Mapper;
 using Eagency.BLL.Services;
 using Eagency.BLL.Services.Interfaces;
 using Eagency.Dal;
@@ -29,6 +30,10 @@ namespace Eagency.Web.Server
     {
         public Startup(IConfiguration configuration)
         {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ExcludeSharedTokenCacheCredential = true });
+            builder.AddAzureKeyVault(new Uri(@"https://festivall-keyvault.vault.azure.net/"), credential);
+            configuration = builder.Build();
             Configuration = configuration;
         }
 
@@ -38,9 +43,9 @@ namespace Eagency.Web.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            string dbConnectionString = Configuration["eagencyconnection"];
             services.AddDbContext<EagencyDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(dbConnectionString));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -82,17 +87,14 @@ namespace Eagency.Web.Server
             services.AddAuthentication()
                 .AddFacebook(facebookOptions =>
                 {
-                    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-                    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                    facebookOptions.AppId = Configuration["facebook-appid"];
+                    facebookOptions.AppSecret = Configuration["facebook-appsecret"];
                 })
                 .AddCookie(p => p.SlidingExpiration = true)
                 .AddGoogle(options =>
                 {
-                    IConfigurationSection googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleAuthNSection["ClientId"];
-                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                    options.ClientId = Configuration["google-clientid"];
+                    options.ClientSecret = Configuration["google-clientsecret"];
                 });
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
