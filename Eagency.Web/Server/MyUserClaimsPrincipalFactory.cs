@@ -73,7 +73,16 @@ namespace Eagency.Web.Server
                 return principal;
             }
 
-            var user = await _userService.GetByIdModelAsync(Id.Value);
+            User user = new User();
+            try
+            {
+                user = await _userService.GetByIdModelAsync(Id.Value);
+            }
+            catch (Exception)
+            {
+
+            }
+
             if (user == null)
             {
                 return principal;

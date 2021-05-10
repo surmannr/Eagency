@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.Dal", "Eagency.Dal\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagency.BLL", "Eagency.BLL\Eagency.BLL.csproj", "{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eagency.Tests", "Eagency.Tests\Eagency.Tests.csproj", "{781E2C99-117B-41A8-95D9-8292F964CFB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FEA8F8-4CE7-40AF-9315-14597A4B1352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{781E2C99-117B-41A8-95D9-8292F964CFB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{781E2C99-117B-41A8-95D9-8292F964CFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{781E2C99-117B-41A8-95D9-8292F964CFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{781E2C99-117B-41A8-95D9-8292F964CFB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

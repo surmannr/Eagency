@@ -60,10 +60,6 @@ namespace Eagency.BLL.Services
         public async Task<User> GetByIdModelAsync(string id)
         {
             var user = await db.Users.Where(p => p.Id == id).FirstOrDefaultAsync();
-            if (user == null)
-            {
-                throw new DbNullException();
-            }
             return user;
         }
 

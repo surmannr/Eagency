@@ -61,9 +61,23 @@ namespace Eagency.BLL.Services
         {
             if (CheckEntity(create))
             {
-                var result = db.Contracts.Add(mapper.Map<Contract>(create));
-                await db.SaveChangesAsync();
-                return mapper.Map<ContractDto>(result.Entity);
+                var property = await db.Properties.Where(c => c.Id == create.PropertyId).Include(e => e.Contract).FirstOrDefaultAsync();
+                if(property != null)
+                {
+                    if (property.Sold)
+                    {
+                        throw new InvalidQueryParamsException("You can't create a contract for this property, because it has one.");
+                    }
+                    var result = db.Contracts.Add(mapper.Map<Contract>(create));
+                    property.Sold = true;
+                    await db.SaveChangesAsync();
+                    return mapper.Map<ContractDto>(result.Entity);
+                }
+                else
+                {
+                    throw new InvalidQueryParamsException();
+                }
+
             }
             else
             {
@@ -78,6 +92,8 @@ namespace Eagency.BLL.Services
             {
                 throw new DbNullException();
             }
+            var property = await db.Properties.Where(c => c.Id == contract.PropertyId).FirstOrDefaultAsync();
+            if (property != null) property.Sold = false;
             db.Contracts.Remove(contract);
             await db.SaveChangesAsync();
         }

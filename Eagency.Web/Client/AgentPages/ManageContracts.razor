@@ -21,12 +21,14 @@
         <col />
         <col />
         <col />
+        <col />
     </ColGroup>
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.AgentName)">Agent name</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.ClientName)">Client name</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.PropertyId)">Property ID</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.FeePercentage)">Fee percentage</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.PaymentFrequency)">Payment frequency</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ContractDto, object>(x=>x.PaymentMethod)">Payment method</MudTableSortLabel></MudTh>
@@ -39,6 +41,7 @@
         <MudTd DataLabel="Agent name">@context.AgentName</MudTd>
         <MudTd DataLabel="Client name">@context.ClientName</MudTd>
         <MudTd DataLabel="Date">@context.Date.ToString("yyyy.MM.dd.")</MudTd>
+        <MudTd DataLabel="Property ID">#@context.PropertyId</MudTd>
         <MudTd DataLabel="Fee percentage">@context.FeePercentage.ToString("P2")</MudTd>
         <MudTd DataLabel="Payment frequency">@context.PaymentFrequency.ToString() month</MudTd>
         <MudTd DataLabel="Payment method">@context.PaymentMethod.GetDisplayName()</MudTd>
@@ -103,6 +106,8 @@
         if (element.IsPaid.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.IsSigned.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.PropertyId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.Date.ToString("yyyy.MM.DD.").Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;

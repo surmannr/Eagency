@@ -34,7 +34,7 @@ namespace Eagency.BLL.Services
 
             var comments = await db.Comments.Where(c => c.PropertyId == propertyid).Include(e => e.User).OrderBy(c => c.Date)
                                             .Paging(pagesize, pagenumber).ToListAsync();
-            var count = await db.Comments.CountAsync();
+            var count = await db.Comments.Where(c => c.PropertyId == propertyid).CountAsync();
 
             PagedResult<CommentDto> result = new PagedResult<CommentDto>();
 
