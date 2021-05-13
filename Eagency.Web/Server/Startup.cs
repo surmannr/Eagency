@@ -96,11 +96,13 @@ namespace Eagency.Web.Server
                     options.ClientId = Configuration["google-clientid"];
                     options.ClientSecret = Configuration["google-clientsecret"];
                 });
-
+            /*
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IEmailSender, EmailSender>();
+            */
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
-            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
